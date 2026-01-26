@@ -8,7 +8,7 @@ let currentSearchTerm = '';
 const productsGrid = document.getElementById('productsGrid');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
-const filterBtns = document.querySelectorAll('.filter-btn');
+const categoryFiltersContainer = document.querySelector('.category-filters');
 const loadingState = document.getElementById('loadingState');
 const errorState = document.getElementById('errorState');
 const emptyState = document.getElementById('emptyState');
@@ -27,10 +27,8 @@ function setupEventListeners() {
     searchInput.addEventListener('input', debounce(handleSearch, 300));
     searchBtn.addEventListener('click', handleSearch);
     
-    // Filtros de categoría
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', handleCategoryFilter);
-    });
+    // Filtros de categoría (delegación)
+    categoryFiltersContainer.addEventListener('click', handleCategoryFilter);
     
     // Reintentar
     retryBtn.addEventListener('click', loadProducts);
@@ -54,7 +52,8 @@ async function loadProducts() {
             .from('productos')
             .select(`
                 *,
-                producto_imagenes!inner(url, es_principal)
+                producto_imagenes!inner(url, es_principal),
+                categorias:categoria_id (nombre)
             `)
             .eq('tipo_venta', 'mayorista')
             .eq('disponible', true)
@@ -67,6 +66,7 @@ async function loadProducts() {
         
         allProducts = data || [];
         filteredProducts = [...allProducts];
+        renderCategoryFilters(allProducts);
         
         applyFiltersAndSort();
         renderProducts();
@@ -77,6 +77,26 @@ async function loadProducts() {
         showError();
         hideLoading();
     }
+}
+
+// Renderizar filtros de categoría de forma dinámica según datos cargados
+function renderCategoryFilters(products) {
+    const categories = new Set();
+    products.forEach(p => {
+        const cat = getProductCategory(p);
+        if (cat) categories.add(cat);
+    });
+
+    const buttons = [
+        `<button class="filter-btn ${currentCategory === 'all' ? 'active' : ''}" data-category="all">Todos</button>`
+    ];
+
+    Array.from(categories).sort((a, b) => a.localeCompare(b)).forEach(cat => {
+        const isActive = currentCategory === cat;
+        buttons.push(`<button class="filter-btn ${isActive ? 'active' : ''}" data-category="${cat}">${cat}</button>`);
+    });
+
+    categoryFiltersContainer.innerHTML = buttons.join('');
 }
 
 // Renderizar productos en la cuadrícula
@@ -96,20 +116,20 @@ function renderProducts() {
 
 // Crear tarjeta de producto
 function createProductCard(product) {
-    // Extraer URL de imagen de la relación producto_imagenes
     const imageUrl = product.producto_imagenes && product.producto_imagenes.length > 0 
         ? getImageUrl(product.producto_imagenes[0].url)
         : '';
     const inStock = product.disponible === true && (product.cantidad || 0) > 0;
+    const productCategory = getProductCategory(product);
     
     return `
         <div class="product-card" data-product-id="${product.id}">
             <div class="product-image-container">
                 <img 
                     src="${imageUrl}" 
-                    alt="${product.name}" 
+                    alt="${product.nombre || product.name || 'Producto'}" 
                     class="product-image"
-                    onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E'"
+                    onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E'" 
                     loading="lazy"
                 >
                 ${!inStock ? '<span class="out-of-stock-badge">Agotado</span>' : ''}
@@ -118,7 +138,7 @@ function createProductCard(product) {
             
             <div class="product-info">
                 <h3 class="product-name">${product.nombre || product.name}</h3>
-                ${(product.categoria || product.category) ? `<p class="product-category">${product.categoria || product.category}</p>` : ''}
+                ${productCategory ? `<p class="product-category">${productCategory}</p>` : ''}
                 
                 ${(product.descripcion || product.description) ? `
                     <p class="product-description">${truncateText(product.descripcion || product.description, 80)}</p>
@@ -160,12 +180,13 @@ function handleSearch() {
 
 // Manejar filtro de categoría
 function handleCategoryFilter(e) {
-    const btn = e.target;
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
     currentCategory = btn.dataset.category;
     
     // Actualizar botones activos
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    const buttons = categoryFiltersContainer.querySelectorAll('.filter-btn');
+    buttons.forEach(b => b.classList.toggle('active', b.dataset.category === currentCategory));
     
     applyFiltersAndSort();
     renderProducts();
@@ -175,14 +196,15 @@ function handleCategoryFilter(e) {
 function applyFiltersAndSort() {
     // Filtrar
     filteredProducts = allProducts.filter(product => {
+        const productCategory = getProductCategory(product);
         // Filtro de categoría
-        const matchesCategory = currentCategory === 'all' || (product.categoria || product.category) === currentCategory;
+        const matchesCategory = currentCategory === 'all' || productCategory === currentCategory;
         
         // Filtro de búsqueda
         const matchesSearch = !currentSearchTerm || 
             (product.nombre || product.name || '').toLowerCase().includes(currentSearchTerm) ||
             ((product.descripcion || product.description || '').toLowerCase().includes(currentSearchTerm)) ||
-            ((product.categoria || product.category || '').toLowerCase().includes(currentSearchTerm));
+            (productCategory.toLowerCase().includes(currentSearchTerm));
         
         return matchesCategory && matchesSearch;
     });
@@ -205,6 +227,10 @@ function addToCart(productId) {
 }
 
 // Funciones auxiliares
+function getProductCategory(product) {
+    return (product.categorias && product.categorias.nombre) || product.categoria || product.category || '';
+}
+
 function formatPrice(price) {
     const numPrice = parseFloat(price);
     // Si el precio es entero, no mostrar decimales
