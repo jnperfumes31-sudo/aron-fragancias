@@ -57,9 +57,13 @@ async function loadProducts() {
         
         const { data, error } = await supabaseClient
             .from('productos')
-            .select('*')
+            .select(`
+                *,
+                producto_imagenes!inner(url, es_principal)
+            `)
             .eq('tipo_venta', 'mayorista')
             .eq('disponible', true)
+            .eq('producto_imagenes.es_principal', true)
             .order('nombre', { ascending: true });
         
         if (error) {
@@ -97,7 +101,10 @@ function renderProducts() {
 
 // Crear tarjeta de producto
 function createProductCard(product) {
-    const imageUrl = getImageUrl(product.imagen_url || product.image_url);
+    // Extraer URL de imagen de la relación producto_imagenes
+    const imageUrl = product.producto_imagenes && product.producto_imagenes.length > 0 
+        ? getImageUrl(product.producto_imagenes[0].url)
+        : '';
     const inStock = product.disponible === true && (product.cantidad || 0) > 0;
     
     return `
