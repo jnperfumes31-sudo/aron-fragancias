@@ -179,33 +179,6 @@ body {
     border-color: var(--primary-color);
 }
 
-/* Sort Container */
-.sort-container {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.sort-container label {
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-.sort-select {
-    padding: 0.5rem 1rem;
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-size: 0.95rem;
-    cursor: pointer;
-    background-color: var(--white);
-    transition: var(--transition);
-}
-
-.sort-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
 /* Products Section */
 .products-section {
     margin-bottom: 2rem;

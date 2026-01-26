@@ -3,13 +3,11 @@ let allProducts = [];
 let filteredProducts = [];
 let currentCategory = 'all';
 let currentSearchTerm = '';
-let currentSort = 'name-asc';
 
 // Elementos del DOM
 const productsGrid = document.getElementById('productsGrid');
 const searchInput = document.getElementById('searchInput');
 const searchBtn = document.getElementById('searchBtn');
-const sortSelect = document.getElementById('sortSelect');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const loadingState = document.getElementById('loadingState');
 const errorState = document.getElementById('errorState');
@@ -33,9 +31,6 @@ function setupEventListeners() {
     filterBtns.forEach(btn => {
         btn.addEventListener('click', handleCategoryFilter);
     });
-    
-    // Ordenamiento
-    sortSelect.addEventListener('change', handleSort);
     
     // Reintentar
     retryBtn.addEventListener('click', loadProducts);
@@ -176,13 +171,6 @@ function handleCategoryFilter(e) {
     renderProducts();
 }
 
-// Manejar ordenamiento
-function handleSort() {
-    currentSort = sortSelect.value;
-    applyFiltersAndSort();
-    renderProducts();
-}
-
 // Aplicar filtros y ordenamiento
 function applyFiltersAndSort() {
     // Filtrar
@@ -198,21 +186,12 @@ function applyFiltersAndSort() {
         
         return matchesCategory && matchesSearch;
     });
-    
-    // Ordenar
+
+    // Ordenar por nombre ascendente por defecto
     filteredProducts.sort((a, b) => {
-        switch (currentSort) {
-            case 'name-asc':
-                return (a.nombre || a.name).localeCompare(b.nombre || b.name);
-            case 'name-desc':
-                return (b.nombre || b.name).localeCompare(a.nombre || a.name);
-            case 'price-asc':
-                return (a.precio || a.price) - (b.precio || b.price);
-            case 'price-desc':
-                return (b.precio || b.price) - (a.precio || a.price);
-            default:
-                return 0;
-        }
+        const nameA = (a.nombre || a.name || '').toLowerCase();
+        const nameB = (b.nombre || b.name || '').toLowerCase();
+        return nameA.localeCompare(nameB);
     });
 }
 
