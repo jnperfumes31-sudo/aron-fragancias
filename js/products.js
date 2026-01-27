@@ -121,9 +121,10 @@ function createProductCard(product) {
         : '';
     const inStock = product.disponible === true && (product.cantidad || 0) > 0;
     const productCategory = getProductCategory(product);
+    const categoryClass = getCategoryClass(productCategory);
     
     return `
-        <div class="product-card" data-product-id="${product.id}">
+        <div class="product-card ${categoryClass}" data-product-id="${product.id}">
             <div class="product-image-container">
                 <img 
                     src="${imageUrl}" 
@@ -138,7 +139,7 @@ function createProductCard(product) {
             
             <div class="product-info">
                 <h3 class="product-name">${product.nombre || product.name}</h3>
-                ${productCategory ? `<p class="product-category">${productCategory}</p>` : ''}
+                ${productCategory ? `<p class="product-category ${categoryClass}">${productCategory}</p>` : ''}
                 
                 ${(product.descripcion || product.description) ? `
                     <p class="product-description">${truncateText(product.descripcion || product.description, 80)}</p>
@@ -242,6 +243,15 @@ function goToProductDetail(productId) {
 // Funciones auxiliares
 function getProductCategory(product) {
     return (product.categorias && product.categorias.nombre) || product.categoria || product.category || '';
+}
+
+function getCategoryClass(category) {
+    const value = (category || '').toLowerCase();
+    if (value.includes('hombre')) return 'cat-male';
+    if (value.includes('mujer')) return 'cat-female';
+    if (value.includes('unisex')) return 'cat-unisex';
+    if (value.includes('nicho')) return 'cat-niche';
+    return 'cat-default';
 }
 
 function formatPrice(price) {

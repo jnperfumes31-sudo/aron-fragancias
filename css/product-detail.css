@@ -261,6 +261,11 @@ body::before {
     font-size: 0.85rem;
 }
 
+.tag.cat-male { background: rgba(92, 179, 255, 0.12); color: #5cb3ff; border-color: rgba(92, 179, 255, 0.35); }
+.tag.cat-female { background: rgba(255, 122, 184, 0.12); color: #ff7ab8; border-color: rgba(255, 122, 184, 0.35); }
+.tag.cat-unisex { background: rgba(180, 151, 255, 0.12); color: #b497ff; border-color: rgba(180, 151, 255, 0.35); }
+.tag.cat-niche { background: rgba(255, 196, 114, 0.12); color: #ffc472; border-color: rgba(255, 196, 114, 0.35); }
+
 .pill {
     padding: 0.35rem 0.85rem;
     border-radius: 999px;
@@ -383,6 +388,18 @@ body::before {
 .btn-ghost:hover {
     border-color: var(--gold);
     color: var(--gold);
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: #0f0d0b;
+    border: 1px solid #1ebe5d;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.35);
+}
+
+.btn-whatsapp:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 14px 36px rgba(37, 211, 102, 0.45);
 }
 
 .btn:disabled {

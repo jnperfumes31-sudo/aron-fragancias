@@ -495,6 +495,22 @@ body::after {
     box-shadow: 0 0 10px var(--glow);
 }
 
+.product-card.cat-male .product-category,
+.product-category.cat-male { color: #5cb3ff; }
+.product-category.cat-male::before { background: #5cb3ff; box-shadow: 0 0 10px rgba(92, 179, 255, 0.6); }
+
+.product-card.cat-female .product-category,
+.product-category.cat-female { color: #ff7ab8; }
+.product-category.cat-female::before { background: #ff7ab8; box-shadow: 0 0 10px rgba(255, 122, 184, 0.6); }
+
+.product-card.cat-unisex .product-category,
+.product-category.cat-unisex { color: #b497ff; }
+.product-category.cat-unisex::before { background: #b497ff; box-shadow: 0 0 10px rgba(180, 151, 255, 0.6); }
+
+.product-card.cat-niche .product-category,
+.product-category.cat-niche { color: #ffc472; }
+.product-category.cat-niche::before { background: #ffc472; box-shadow: 0 0 10px rgba(255, 196, 114, 0.6); }
+
 .product-description {
     color: var(--text-secondary);
     font-size: 0.9rem;

@@ -100,6 +100,15 @@ function getCategory(product) {
     return (product.categorias && product.categorias.nombre) || product.categoria || product.category || '';
 }
 
+function getCategoryClass(category) {
+    const value = (category || '').toLowerCase();
+    if (value.includes('hombre')) return 'cat-male';
+    if (value.includes('mujer')) return 'cat-female';
+    if (value.includes('unisex')) return 'cat-unisex';
+    if (value.includes('nicho')) return 'cat-niche';
+    return 'cat-default';
+}
+
 function setMainImage(url) {
     state.mainImageUrl = url;
     ui.mainImage.src = url;
@@ -193,6 +202,10 @@ function renderProduct(product) {
     renderGallery(product.producto_imagenes || []);
     renderPricing(product);
     renderAvailability(product);
+
+    const categoryClass = getCategoryClass(category);
+    ui.categoryTag.classList.remove('cat-male', 'cat-female', 'cat-unisex', 'cat-niche', 'cat-default');
+    ui.categoryTag.classList.add(categoryClass);
 
     const highlightItems = buildHighlights(product);
     renderHighlights(highlightItems);
