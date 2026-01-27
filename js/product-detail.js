@@ -2,6 +2,8 @@
 const state = {
     product: null,
     mainImageUrl: '',
+    images: [],
+    currentIndex: 0,
 };
 
 const ui = {
@@ -15,6 +17,8 @@ const ui = {
     thumbnails: document.getElementById('thumbnails'),
     stockBadge: document.getElementById('stockBadge'),
     discountBadge: document.getElementById('discountBadge'),
+    prevBtn: document.getElementById('prevImageBtn'),
+    nextBtn: document.getElementById('nextImageBtn'),
     categoryTag: document.getElementById('categoryTag'),
     availability: document.getElementById('availability'),
     productName: document.getElementById('productName'),
@@ -37,14 +41,14 @@ const productId = params.get('id');
 function showLoading() {
     ui.loading.style.display = 'flex';
     ui.productSection.style.display = 'none';
-    ui.extraSection.style.display = 'none';
+    if (ui.extraSection) ui.extraSection.style.display = 'none';
     ui.error.style.display = 'none';
 }
 
 function showError() {
     ui.loading.style.display = 'none';
     ui.productSection.style.display = 'none';
-    ui.extraSection.style.display = 'none';
+    if (ui.extraSection) ui.extraSection.style.display = 'none';
     ui.error.style.display = 'flex';
 }
 
@@ -52,7 +56,7 @@ function showContent() {
     ui.loading.style.display = 'none';
     ui.error.style.display = 'none';
     ui.productSection.style.display = 'grid';
-    ui.extraSection.style.display = 'grid';
+    if (ui.extraSection) ui.extraSection.style.display = 'grid';
 }
 
 function formatPrice(price) {
@@ -80,6 +84,7 @@ function renderHighlights(items) {
 }
 
 function renderQuickDetails(product, priceDisplay) {
+    if (!ui.quickDetails) return;
     const rows = [
         { icon: 'fa-badge-percent', text: priceDisplay },
         { icon: 'fa-box', text: `Stock: ${product.cantidad ?? 'N/D'}` },
@@ -100,34 +105,39 @@ function setMainImage(url) {
     ui.mainImage.src = url;
 }
 
+function updateActiveThumbnail(index) {
+    ui.thumbnails.querySelectorAll('.thumbnail').forEach((btn, idx) => {
+        btn.classList.toggle('active', idx === index);
+    });
+}
+
+function showImageByIndex(index) {
+    if (!state.images.length) return;
+    const total = state.images.length;
+    state.currentIndex = ((index % total) + total) % total;
+    const url = state.images[state.currentIndex];
+    setMainImage(url);
+    updateActiveThumbnail(state.currentIndex);
+}
+
 function renderGallery(images) {
     if (!images.length) {
         const placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22480%22 height=%23480%22%3E%3Crect fill=%22%23101010%22 width=%22480%22 height=%23480%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin%20imagen%3C/text%3E%3C/svg%3E';
         setMainImage(placeholder);
-        ui.thumbnails.innerHTML = '';
+        state.images = [];
+        state.currentIndex = 0;
         return;
     }
 
     const sorted = [...images].sort((a, b) => (b.es_principal === true) - (a.es_principal === true));
     const normalized = sorted.map(img => getImageUrl(img.url));
+    state.images = normalized;
+    state.currentIndex = 0;
 
-    setMainImage(normalized[0]);
+    showImageByIndex(0);
 
-    ui.thumbnails.innerHTML = normalized
-        .map((url, idx) => `
-            <button class="thumbnail ${idx === 0 ? 'active' : ''}" data-url="${url}" aria-label="Ver imagen ${idx + 1}">
-                <img src="${url}" alt="Miniatura ${idx + 1}" loading="lazy">
-            </button>
-        `)
-        .join('');
-
-    ui.thumbnails.querySelectorAll('.thumbnail').forEach(btn => {
-        btn.addEventListener('click', () => {
-            ui.thumbnails.querySelectorAll('.thumbnail').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            setMainImage(btn.dataset.url);
-        });
-    });
+    if (ui.prevBtn) ui.prevBtn.onclick = () => showImageByIndex(state.currentIndex - 1);
+    if (ui.nextBtn) ui.nextBtn.onclick = () => showImageByIndex(state.currentIndex + 1);
 }
 
 function renderPricing(product) {
