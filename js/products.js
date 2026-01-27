@@ -148,10 +148,10 @@ function createProductCard(product) {
                 <div class="product-footer">
                     <div class="product-price">
                         ${(product.descuento || product.oferta) ? `
-                            <span class="original-price">$${formatPrice(product.precio || product.price)}</span>
-                            <span class="discounted-price">$${formatPrice(calculateDiscountedPrice(product.precio || product.price, product.descuento || product.oferta))}</span>
+                            <span class="original-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(product.precio || product.price)}</span></span>
+                            <span class="discounted-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(calculateDiscountedPrice(product.precio || product.price, product.descuento || product.oferta))}</span></span>
                         ` : `
-                            <span class="current-price">$${formatPrice(product.precio || product.price)}</span>
+                            <span class="current-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(product.precio || product.price)}</span></span>
                         `}
                     </div>
 
@@ -160,14 +160,6 @@ function createProductCard(product) {
                         onclick="goToProductDetail('${String(product.id).replace(/'/g, "\\'")}')"
                     >
                         Ver detalle
-                    </button>
-                    
-                    <button 
-                        class="add-to-cart-btn ${!inStock ? 'disabled' : ''}"
-                        ${!inStock ? 'disabled' : ''}
-                        onclick="addToCart(${product.id})"
-                    >
-                        ${inStock ? 'Agregar al carrito' : 'Agotado'}
                     </button>
                 </div>
                 
@@ -223,15 +215,6 @@ function applyFiltersAndSort() {
         const nameB = (b.nombre || b.name || '').toLowerCase();
         return nameA.localeCompare(nameB);
     });
-}
-
-// Agregar al carrito (placeholder)
-function addToCart(productId) {
-    const product = allProducts.find(p => p.id === productId);
-    if (product) {
-        alert(`"${product.nombre || product.name}" agregado al carrito`);
-        // Aquí implementarías la lógica real del carrito
-    }
 }
 
 function goToProductDetail(productId) {
