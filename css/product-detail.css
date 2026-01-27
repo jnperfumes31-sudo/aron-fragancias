@@ -409,20 +409,6 @@ body::before {
     box-shadow: none;
 }
 
-.highlights {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.highlight-pill {
-    padding: 0.45rem 0.75rem;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.2);
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-}
 
 .loading-state,
 .error-state {

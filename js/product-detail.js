@@ -31,7 +31,6 @@ const ui = {
     categoryValue: document.getElementById('categoryValue'),
     addToCartBtn: document.getElementById('addToCartBtn'),
     contactBtn: document.getElementById('contactBtn'),
-    highlights: document.getElementById('highlights'),
     quickDetails: document.getElementById('quickDetails'),
 };
 
@@ -65,22 +64,6 @@ function formatPrice(price) {
         ? { minimumFractionDigits: 0, maximumFractionDigits: 0 }
         : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
     return new Intl.NumberFormat('es-MX', opts).format(num);
-}
-
-function buildHighlights(product) {
-    const items = [];
-    if (product.tipo_venta) items.push(`Venta ${product.tipo_venta}`);
-    if (product.categorias?.nombre) items.push(product.categorias.nombre);
-    if (product.origen) items.push(`Origen: ${product.origen}`);
-    if (product.presentacion) items.push(`Presentacion: ${product.presentacion}`);
-    if (items.length === 0) items.push('Fragancia seleccionada por Aron');
-    return items;
-}
-
-function renderHighlights(items) {
-    ui.highlights.innerHTML = items
-        .map(text => `<span class="highlight-pill">${text}</span>`)
-        .join('');
 }
 
 function renderQuickDetails(product, priceDisplay) {
@@ -206,9 +189,6 @@ function renderProduct(product) {
     const categoryClass = getCategoryClass(category);
     ui.categoryTag.classList.remove('cat-male', 'cat-female', 'cat-unisex', 'cat-niche', 'cat-default');
     ui.categoryTag.classList.add(categoryClass);
-
-    const highlightItems = buildHighlights(product);
-    renderHighlights(highlightItems);
 
     ui.addToCartBtn.onclick = () => {
         alert(`"${product.nombre || product.name}" agregado al carrito.`);
