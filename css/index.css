@@ -7,14 +7,60 @@
 }
 
 :root {
-    --primary: #0a0e27;
-    --secondary: #1a1f3a;
-    --accent-1: #00d9ff;
-    --accent-2: #7b2cbf;
-    --accent-3: #ff006e;
-    --text-primary: #ffffff;
-    --text-secondary: #b8c5d6;
-    --glow: rgba(0, 217, 255, 0.5);
+    /* Colores base de la marca - DORADOS SUAVES */
+    --gold: #c9a24d;
+    --gold-light: #deb887;
+    --gold-dark: #9d8344;
+    --gold-accent: #d4a574;
+    
+    /* Fondos oscuros elegantes - más suaves */
+    --bg-dark: #1a1817;
+    --bg-darker: #0f0d0b;
+    --bg-surface: #2a2723;
+    --bg-card: #3a3531;
+    
+    /* Fondos claros elegantes */
+    --ivory: #faf8f3;
+    --cream: #f5f0e6;
+    --linen: #faf3e0;
+    
+    /* Familia Floral */
+    --rose-gold: #c9a5a5;
+    --jasmine: #e8d4b0;
+    --orchid: #d9a8d9;
+    
+    /* Familia Fresca */
+    --aqua: #7db8b0;
+    --mint: #89bfb2;
+    --sky: #8fbdd1;
+    
+    /* Familia Amaderada */
+    --sandalwood: #8d6b5a;
+    --cedar: #8b8270;
+    --amber: #c9a574;
+    
+    /* Familia Oriental */
+    --spice: #b8704d;
+    --vanilla: #f0dba8;
+    --musk: #8b8878;
+    
+    /* Textos y neutrales */
+    --charcoal: #2c2c2c;
+    --text-dark: #1a1a1a;
+    --text-light: #f7f7f7;
+    --slate: #4a5568;
+    --white: #ffffff;
+    
+    /* Variables de uso */
+    --primary: var(--bg-dark);
+    --secondary: var(--bg-surface);
+    --accent-1: var(--gold);
+    --accent-2: var(--gold-accent);
+    --accent-3: var(--rose-gold);
+    --text-primary: var(--text-light);
+    --text-secondary: var(--slate);
+    --glow: rgba(201, 162, 77, 0.6);
+    --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
 }
 
 body {
@@ -35,9 +81,9 @@ body {
     height: 100%;
     z-index: 0;
     background: 
-        radial-gradient(circle at 20% 50%, rgba(123, 44, 191, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(255, 0, 110, 0.1) 0%, transparent 40%);
+        radial-gradient(circle at 20% 50%, rgba(201, 162, 77, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(212, 165, 116, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(201, 165, 165, 0.08) 0%, transparent 40%);
 }
 
 .animated-bg::before {
@@ -52,8 +98,8 @@ body {
             0deg,
             transparent,
             transparent 2px,
-            rgba(0, 217, 255, 0.03) 2px,
-            rgba(0, 217, 255, 0.03) 4px
+            rgba(201, 162, 77, 0.03) 2px,
+            rgba(201, 162, 77, 0.03) 4px
         );
     animation: scan 8s linear infinite;
 }
@@ -157,8 +203,8 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1.2rem;
-    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(123, 44, 191, 0.1));
-    border: 1px solid rgba(0, 217, 255, 0.3);
+    background: linear-gradient(135deg, rgba(201, 162, 77, 0.15), rgba(212, 165, 116, 0.15));
+    border: 1px solid rgba(201, 162, 77, 0.4);
     border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 600;
@@ -171,10 +217,10 @@ body {
 
 @keyframes pulse-glow {
     0%, 100% {
-        box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+        box-shadow: 0 0 20px rgba(201, 162, 77, 0.4);
     }
     50% {
-        box-shadow: 0 0 40px rgba(0, 217, 255, 0.6);
+        box-shadow: 0 0 40px rgba(201, 162, 77, 0.7);
     }
 }
 
@@ -236,8 +282,9 @@ body {
 
 .btn-primary {
     background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-    color: var(--text-primary);
-    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+    color: var(--bg-darker);
+    box-shadow: 0 10px 40px rgba(201, 162, 77, 0.4);
+    font-weight: 900;
 }
 
 .btn-primary::before {
@@ -257,7 +304,7 @@ body {
 
 .btn-primary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 50px rgba(0, 217, 255, 0.6);
+    box-shadow: 0 15px 50px rgba(201, 162, 77, 0.6);
 }
 
 .btn-secondary {
@@ -269,9 +316,9 @@ body {
 
 .btn-secondary:hover {
     border-color: var(--accent-1);
-    background: rgba(0, 217, 255, 0.1);
+    background: rgba(201, 162, 77, 0.15);
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
+    box-shadow: 0 10px 30px rgba(201, 162, 77, 0.3);
 }
 
 /* Right Visual */
@@ -303,7 +350,7 @@ body {
 .showcase-circle {
     position: absolute;
     border-radius: 50%;
-    border: 2px solid rgba(0, 217, 255, 0.2);
+    border: 2px solid rgba(201, 162, 77, 0.25);
 }
 
 .circle-1 {
@@ -360,8 +407,8 @@ body {
 .feature-card {
     position: absolute;
     padding: 1rem 1.5rem;
-    background: rgba(26, 31, 58, 0.8);
-    border: 1px solid rgba(0, 217, 255, 0.3);
+    background: rgba(42, 39, 35, 0.9);
+    border: 1px solid rgba(201, 162, 77, 0.4);
     border-radius: 15px;
     backdrop-filter: blur(10px);
     display: flex;
@@ -430,8 +477,8 @@ body {
 .stat-item {
     text-align: center;
     padding: 2rem;
-    background: rgba(26, 31, 58, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(42, 39, 35, 0.6);
+    border: 1px solid rgba(201, 162, 77, 0.2);
     border-radius: 20px;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
@@ -440,7 +487,7 @@ body {
 .stat-item:hover {
     transform: translateY(-5px);
     border-color: var(--accent-1);
-    box-shadow: 0 10px 40px rgba(0, 217, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(201, 162, 77, 0.3);
 }
 
 .stat-number {
