@@ -153,6 +153,13 @@ function createProductCard(product) {
                             <span class="current-price">$${formatPrice(product.precio || product.price)}</span>
                         `}
                     </div>
+
+                    <button 
+                        class="view-detail-btn"
+                        onclick="goToProductDetail('${String(product.id).replace(/'/g, "\\'")}')"
+                    >
+                        Ver detalle
+                    </button>
                     
                     <button 
                         class="add-to-cart-btn ${!inStock ? 'disabled' : ''}"
@@ -224,6 +231,12 @@ function addToCart(productId) {
         alert(`"${product.nombre || product.name}" agregado al carrito`);
         // Aquí implementarías la lógica real del carrito
     }
+}
+
+function goToProductDetail(productId) {
+    if (!productId) return;
+    const safeId = encodeURIComponent(productId);
+    window.location.href = `product-detail.html?id=${safeId}`;
 }
 
 // Funciones auxiliares

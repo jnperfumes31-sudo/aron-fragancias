@@ -591,6 +591,26 @@ body::after {
     box-shadow: none;
 }
 
+.view-detail-btn {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+}
+
+.view-detail-btn:hover {
+    border-color: var(--accent-1);
+    color: var(--accent-1);
+    transform: translateY(-2px);
+}
+
 .low-stock-warning {
     color: var(--gold-accent);
     font-size: 0.8rem;

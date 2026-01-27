@@ -1,0 +1,235 @@
+// Vista de detalle de producto
+const state = {
+    product: null,
+    mainImageUrl: '',
+};
+
+const ui = {
+    loading: document.getElementById('loadingState'),
+    error: document.getElementById('errorState'),
+    productSection: document.getElementById('productDetail'),
+    extraSection: document.getElementById('extraInfo'),
+    retryBtn: document.getElementById('retryBtn'),
+    breadcrumbName: document.getElementById('breadcrumbName'),
+    mainImage: document.getElementById('mainImage'),
+    thumbnails: document.getElementById('thumbnails'),
+    stockBadge: document.getElementById('stockBadge'),
+    discountBadge: document.getElementById('discountBadge'),
+    categoryTag: document.getElementById('categoryTag'),
+    availability: document.getElementById('availability'),
+    productName: document.getElementById('productName'),
+    productDescription: document.getElementById('productDescription'),
+    currentPrice: document.getElementById('currentPrice'),
+    originalPrice: document.getElementById('originalPrice'),
+    discountChip: document.getElementById('discountChip'),
+    stockCount: document.getElementById('stockCount'),
+    saleType: document.getElementById('saleType'),
+    categoryValue: document.getElementById('categoryValue'),
+    addToCartBtn: document.getElementById('addToCartBtn'),
+    contactBtn: document.getElementById('contactBtn'),
+    highlights: document.getElementById('highlights'),
+    quickDetails: document.getElementById('quickDetails'),
+};
+
+const params = new URLSearchParams(window.location.search);
+const productId = params.get('id');
+
+function showLoading() {
+    ui.loading.style.display = 'flex';
+    ui.productSection.style.display = 'none';
+    ui.extraSection.style.display = 'none';
+    ui.error.style.display = 'none';
+}
+
+function showError() {
+    ui.loading.style.display = 'none';
+    ui.productSection.style.display = 'none';
+    ui.extraSection.style.display = 'none';
+    ui.error.style.display = 'flex';
+}
+
+function showContent() {
+    ui.loading.style.display = 'none';
+    ui.error.style.display = 'none';
+    ui.productSection.style.display = 'grid';
+    ui.extraSection.style.display = 'grid';
+}
+
+function formatPrice(price) {
+    const num = Number(price) || 0;
+    const opts = Number.isInteger(num)
+        ? { minimumFractionDigits: 0, maximumFractionDigits: 0 }
+        : { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+    return new Intl.NumberFormat('es-MX', opts).format(num);
+}
+
+function buildHighlights(product) {
+    const items = [];
+    if (product.tipo_venta) items.push(`Venta ${product.tipo_venta}`);
+    if (product.categorias?.nombre) items.push(product.categorias.nombre);
+    if (product.origen) items.push(`Origen: ${product.origen}`);
+    if (product.presentacion) items.push(`Presentacion: ${product.presentacion}`);
+    if (items.length === 0) items.push('Fragancia seleccionada por Aron');
+    return items;
+}
+
+function renderHighlights(items) {
+    ui.highlights.innerHTML = items
+        .map(text => `<span class="highlight-pill">${text}</span>`)
+        .join('');
+}
+
+function renderQuickDetails(product, priceDisplay) {
+    const rows = [
+        { icon: 'fa-badge-percent', text: priceDisplay },
+        { icon: 'fa-box', text: `Stock: ${product.cantidad ?? 'N/D'}` },
+        { icon: 'fa-tags', text: `Categoria: ${getCategory(product) || 'Sin categoria'}` },
+    ];
+
+    ui.quickDetails.innerHTML = rows
+        .map(item => `<li><i class="fas ${item.icon}"></i> ${item.text}</li>`)
+        .join('');
+}
+
+function getCategory(product) {
+    return (product.categorias && product.categorias.nombre) || product.categoria || product.category || '';
+}
+
+function setMainImage(url) {
+    state.mainImageUrl = url;
+    ui.mainImage.src = url;
+}
+
+function renderGallery(images) {
+    if (!images.length) {
+        const placeholder = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22480%22 height=%23480%22%3E%3Crect fill=%22%23101010%22 width=%22480%22 height=%23480%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin%20imagen%3C/text%3E%3C/svg%3E';
+        setMainImage(placeholder);
+        ui.thumbnails.innerHTML = '';
+        return;
+    }
+
+    const sorted = [...images].sort((a, b) => (b.es_principal === true) - (a.es_principal === true));
+    const normalized = sorted.map(img => getImageUrl(img.url));
+
+    setMainImage(normalized[0]);
+
+    ui.thumbnails.innerHTML = normalized
+        .map((url, idx) => `
+            <button class="thumbnail ${idx === 0 ? 'active' : ''}" data-url="${url}" aria-label="Ver imagen ${idx + 1}">
+                <img src="${url}" alt="Miniatura ${idx + 1}" loading="lazy">
+            </button>
+        `)
+        .join('');
+
+    ui.thumbnails.querySelectorAll('.thumbnail').forEach(btn => {
+        btn.addEventListener('click', () => {
+            ui.thumbnails.querySelectorAll('.thumbnail').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            setMainImage(btn.dataset.url);
+        });
+    });
+}
+
+function renderPricing(product) {
+    const base = product.precio || product.price || 0;
+    const discount = product.descuento || product.oferta || 0;
+    const hasDiscount = Number(discount) > 0;
+    const finalPrice = hasDiscount ? base - (base * discount / 100) : base;
+
+    ui.currentPrice.textContent = `$${formatPrice(finalPrice)}`;
+
+    if (hasDiscount) {
+        ui.originalPrice.textContent = `$${formatPrice(base)}`;
+        ui.discountChip.style.display = 'inline-flex';
+        ui.discountChip.textContent = `- ${discount}%`; 
+        ui.discountBadge.textContent = `-${discount}%`;
+        ui.discountBadge.style.display = 'block';
+    } else {
+        ui.originalPrice.textContent = '';
+        ui.discountChip.style.display = 'none';
+        ui.discountBadge.style.display = 'none';
+    }
+
+    renderQuickDetails(product, `Precio final: $${formatPrice(finalPrice)}`);
+}
+
+function renderAvailability(product) {
+    const stock = product.cantidad ?? 0;
+    const inStock = product.disponible === true && stock > 0;
+
+    ui.stockBadge.textContent = inStock ? 'Disponible' : 'Agotado';
+    ui.stockBadge.style.background = inStock ? 'rgba(201, 162, 77, 0.9)' : 'rgba(255, 99, 71, 0.9)';
+
+    ui.availability.textContent = inStock ? 'En stock' : 'No disponible';
+    ui.availability.classList.toggle('soldout', !inStock);
+
+    ui.stockCount.textContent = inStock ? stock : '0';
+
+    ui.addToCartBtn.disabled = !inStock;
+    ui.addToCartBtn.textContent = inStock ? 'Agregar al carrito' : 'Sin stock';
+}
+
+function renderProduct(product) {
+    state.product = product;
+    const category = getCategory(product);
+
+    ui.breadcrumbName.textContent = product.nombre || product.name || 'Producto';
+    ui.productName.textContent = product.nombre || product.name || 'Producto';
+    ui.productDescription.textContent = product.descripcion || product.description || 'Fragancia exclusiva disponible en Aron.';
+    ui.categoryTag.textContent = category || 'Categoria';
+    ui.categoryValue.textContent = category || 'Sin categoria';
+    ui.saleType.textContent = product.tipo_venta || 'Sin dato';
+
+    renderGallery(product.producto_imagenes || []);
+    renderPricing(product);
+    renderAvailability(product);
+
+    const highlightItems = buildHighlights(product);
+    renderHighlights(highlightItems);
+
+    ui.addToCartBtn.onclick = () => {
+        alert(`"${product.nombre || product.name}" agregado al carrito.`);
+    };
+
+    ui.contactBtn.onclick = () => {
+        const text = encodeURIComponent(`Hola, quiero consultar disponibilidad de ${product.nombre || product.name}.`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+    };
+
+    showContent();
+}
+
+async function loadProduct() {
+    if (!productId) {
+        showError();
+        return;
+    }
+
+    try {
+        showLoading();
+        const { data, error } = await supabaseClient
+            .from('productos')
+            .select(`*, producto_imagenes (url, es_principal), categorias:categoria_id (nombre)`) 
+            .eq('id', productId)
+            .maybeSingle();
+
+        if (error) throw error;
+        if (!data) throw new Error('Producto no encontrado');
+
+        renderProduct(data);
+    } catch (err) {
+        console.error('No se pudo cargar el detalle', err);
+        showError();
+    }
+}
+
+function init() {
+    ui.retryBtn?.addEventListener('click', loadProduct);
+    loadProduct();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}

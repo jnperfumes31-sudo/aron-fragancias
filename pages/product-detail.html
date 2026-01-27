@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del producto | Aron Fragancias</title>
+    <link rel="stylesheet" href="../css/product-detail.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <img src="../assets/image.png" alt="Logo Aron" class="logo-img">
+                    ARON FRAGANCIAS
+                </h1>
+                <nav class="nav">
+                    <a href="../index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Inicio
+                    </a>
+                    <a href="products.html" class="nav-link active">
+                        <i class="fas fa-shopping-bag"></i>
+                        Productos
+                    </a>
+                    <a href="#contacto" class="nav-link">
+                        <i class="fas fa-envelope"></i>
+                        Contacto
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="products.html" class="breadcrumb-link"><i class="fas fa-arrow-left"></i> Volver al catálogo</a>
+                <span class="breadcrumb-separator">/</span>
+                <span id="breadcrumbName">Detalle</span>
+            </div>
+
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Cargando detalle del producto...</p>
+            </div>
+
+            <div id="errorState" class="error-state" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <h3>No pudimos cargar el producto</h3>
+                    <p>Revisa tu conexión o intenta nuevamente.</p>
+                    <button id="retryBtn" class="btn btn-secondary"><i class="fas fa-redo"></i> Reintentar</button>
+                </div>
+            </div>
+
+            <section id="productDetail" class="product-layout" style="display: none;">
+                <div class="gallery">
+                    <div class="main-image">
+                        <img id="mainImage" src="" alt="Producto" loading="lazy">
+                        <div id="stockBadge" class="stock-badge"></div>
+                        <div id="discountBadge" class="discount-badge"></div>
+                    </div>
+                    <div id="thumbnails" class="thumbnails"></div>
+                </div>
+
+                <div class="info">
+                    <div class="meta">
+                        <span id="categoryTag" class="tag">Categoria</span>
+                        <span id="availability" class="pill"></span>
+                    </div>
+                    <h2 id="productName" class="title">Nombre</h2>
+                    <p id="productDescription" class="description"></p>
+
+                    <div class="price-block">
+                        <div>
+                            <span id="currentPrice" class="price">$0</span>
+                            <span id="originalPrice" class="price original"></span>
+                        </div>
+                        <div id="discountChip" class="chip" style="display: none;"></div>
+                    </div>
+
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="label">Disponibles</span>
+                            <span id="stockCount" class="value">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Tipo de venta</span>
+                            <span id="saleType" class="value">-</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Categoría</span>
+                            <span id="categoryValue" class="value">-</span>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button id="addToCartBtn" class="btn btn-primary">
+                            <i class="fas fa-cart-plus"></i> Agregar al carrito
+                        </button>
+                        <button id="contactBtn" class="btn btn-ghost">
+                            <i class="fas fa-comments"></i> Consultar disponibilidad
+                        </button>
+                    </div>
+
+                    <div class="highlights" id="highlights"></div>
+                </div>
+            </section>
+
+            <section id="extraInfo" class="extra" style="display: none;">
+                <div class="extra-card">
+                    <h3><i class="fas fa-sparkles"></i> Detalles rápidos</h3>
+                    <ul id="quickDetails" class="list"></ul>
+                </div>
+                <div class="extra-card">
+                    <h3><i class="fas fa-truck"></i> Envío y garantías</h3>
+                    <ul class="list">
+                        <li><i class="fas fa-badge-check"></i> Productos originales con garantía de autenticidad.</li>
+                        <li><i class="fas fa-box-open"></i> Empaque seguro y seguimiento en tiempo real.</li>
+                        <li><i class="fas fa-shield-halved"></i> Cambios por defectos dentro de 7 días.</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>2026 Aron Fragancias. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/product-detail.js"></script>
+</body>
+</html>
