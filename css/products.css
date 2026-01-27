@@ -164,12 +164,11 @@ body::after {
     50% { background-position: 100% 50%; }
 }
 
-.logo i {
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.logo-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: contain;
     animation: pulse-glow 2s ease-in-out infinite;
 }
 
