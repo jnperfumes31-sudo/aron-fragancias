@@ -18,6 +18,7 @@ const retryBtn = document.getElementById('retryBtn');
 // Inicializar la aplicación
 async function init() {
     setupEventListeners();
+    updateCartCount();
     await loadProducts();
 }
 
@@ -191,13 +192,23 @@ function createProductCard(product) {
                         `}
                     </div>
 
-                    <button 
-                        class="view-detail-btn ${esAgotado ? 'disabled' : ''}"
-                        onclick="goToProductDetail('${String(product.id).replace(/'/g, "\\'")}')"
-                        ${esAgotado ? 'disabled' : ''}
-                    >
-                        ${esAgotado ? 'AGOTADO' : 'Ver detalle'}
-                    </button>
+                    <div class="product-buttons">
+                        <button 
+                            class="add-to-cart-btn ${esAgotado ? 'disabled' : ''}"
+                            onclick="addToCart('${String(product.id).replace(/'/g, "\\'")}', '${String(product.nombre || product.name).replace(/'/g, "\\'")}', ${precioFinal}, '${imageUrl}')"
+                            ${esAgotado ? 'disabled' : ''}
+                        >
+                            ${esAgotado ? 'AGOTADO' : '<i class="fas fa-cart-plus"></i>'}
+                        </button>
+
+                        <button 
+                            class="view-detail-btn ${esAgotado ? 'disabled' : ''}"
+                            onclick="goToProductDetail('${String(product.id).replace(/'/g, "\\'")}')"
+                            ${esAgotado ? 'disabled' : ''}
+                        >
+                            ${esAgotado ? 'AGOTADO' : 'Ver detalle'}
+                        </button>
+                    </div>
                 </div>
                 
                 ${(product.cantidad || 0) <= 5 && (product.cantidad || 0) > 0 && !esAgotado ? `

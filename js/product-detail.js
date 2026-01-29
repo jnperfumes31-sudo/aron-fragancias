@@ -219,7 +219,9 @@ function renderProduct(product) {
     ui.categoryTag.classList.add(categoryClass);
 
     ui.addToCartBtn.onclick = () => {
-        alert(`"${product.nombre || product.name}" agregado al carrito.`);
+        const price = product.tiene_descuento && product.descuento_valor ? 
+            (product.precio * (1 - product.descuento_valor / 100)) : product.precio;
+        addToCart(product.id, product.nombre || product.name, price, state.mainImageUrl);
     };
 
     ui.contactBtn.onclick = () => {
@@ -256,6 +258,7 @@ async function loadProduct() {
 
 function init() {
     ui.retryBtn?.addEventListener('click', loadProduct);
+    updateCartCount();
     loadProduct();
 }
 
