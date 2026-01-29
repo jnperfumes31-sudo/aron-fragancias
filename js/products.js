@@ -55,7 +55,7 @@ async function loadProducts() {
                 producto_imagenes!inner(url, es_principal),
                 categorias:categoria_id (nombre)
             `)
-            .eq('tipo_venta', 'mayorista')
+            .eq('tipo_venta', 'detal')
             .eq('disponible', true)
             .eq('producto_imagenes.es_principal', true)
             .order('nombre', { ascending: true });
@@ -123,8 +123,48 @@ function createProductCard(product) {
     const productCategory = getProductCategory(product);
     const categoryClass = getCategoryClass(productCategory);
     
+    // Datos de descuento
+    const tieneDescuento = product.tiene_descuento === true;
+    const esAgotado = product.agotado === true;
+    const descuentoValor = product.descuento_valor || 0;
+    const descuentoTipo = product.descuento_tipo || 'none';
+    
+    // Calcular precio con descuento
+    let precioOriginal = product.precio || 0;
+    let precioFinal = precioOriginal;
+    let porcentajeDescuento = 0;
+    
+    if (tieneDescuento && descuentoValor > 0) {
+        if (descuentoTipo === 'porcentaje') {
+            porcentajeDescuento = descuentoValor;
+            precioFinal = precioOriginal * (1 - descuentoValor / 100);
+        } else if (descuentoTipo === 'monto') {
+            // Convertir a porcentaje para la banda
+            porcentajeDescuento = Math.round((descuentoValor / precioOriginal) * 100);
+            precioFinal = precioOriginal - descuentoValor;
+        } else {
+            // Si hay descuento_valor pero no tiene tipo definido, asumir porcentaje
+            porcentajeDescuento = descuentoValor;
+            precioFinal = precioOriginal * (1 - descuentoValor / 100);
+        }
+    }
+    
     return `
         <div class="product-card ${categoryClass}" data-product-id="${product.id}">
+            <!-- Banda de descuento -->
+            ${tieneDescuento && porcentajeDescuento > 0 ? `
+                <div class="discount-band">
+                    <div class="discount-text">${Math.round(porcentajeDescuento)}%</div>
+                </div>
+            ` : ''}
+            
+            <!-- Banda de agotado -->
+            ${esAgotado ? `
+                <div class="out-of-stock-band">
+                    <div class="out-of-stock-text">AGOTADO</div>
+                </div>
+            ` : ''}
+            
             <div class="product-image-container">
                 <img 
                     src="${imageUrl}" 
@@ -133,37 +173,34 @@ function createProductCard(product) {
                     onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22300%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22300%22 height=%22300%22/%3E%3Ctext fill=%22%239ca3af%22 font-family=%22Arial%22 font-size=%2220%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin Imagen%3C/text%3E%3C/svg%3E'" 
                     loading="lazy"
                 >
-                ${!inStock ? '<span class="out-of-stock-badge">Agotado</span>' : ''}
-                ${product.descuento || product.oferta ? `<span class="discount-badge">-${product.descuento || product.oferta}%</span>` : ''}
             </div>
             
             <div class="product-info">
                 <h3 class="product-name">${product.nombre || product.name}</h3>
                 ${productCategory ? `<p class="product-category ${categoryClass}">${productCategory}</p>` : ''}
                 
-                ${(product.descripcion || product.description) ? `
-                    <p class="product-description">${truncateText(product.descripcion || product.description, 80)}</p>
-                ` : ''}
+
                 
                 <div class="product-footer">
                     <div class="product-price">
-                        ${(product.descuento || product.oferta) ? `
-                            <span class="original-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(product.precio || product.price)}</span></span>
-                            <span class="discounted-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(calculateDiscountedPrice(product.precio || product.price, product.descuento || product.oferta))}</span></span>
+                        ${tieneDescuento && porcentajeDescuento > 0 ? `
+                            <span class="original-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(precioOriginal)}</span></span>
+                            <span class="discounted-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(precioFinal)}</span></span>
                         ` : `
-                            <span class="current-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(product.precio || product.price)}</span></span>
+                            <span class="current-price"><span class="price-currency">$</span><span class="price-value">${formatPrice(precioOriginal)}</span></span>
                         `}
                     </div>
 
                     <button 
-                        class="view-detail-btn"
+                        class="view-detail-btn ${esAgotado ? 'disabled' : ''}"
                         onclick="goToProductDetail('${String(product.id).replace(/'/g, "\\'")}')"
+                        ${esAgotado ? 'disabled' : ''}
                     >
-                        Ver detalle
+                        ${esAgotado ? 'AGOTADO' : 'Ver detalle'}
                     </button>
                 </div>
                 
-                ${(product.cantidad || 0) <= 5 && (product.cantidad || 0) > 0 ? `
+                ${(product.cantidad || 0) <= 5 && (product.cantidad || 0) > 0 && !esAgotado ? `
                     <p class="low-stock-warning">¡Solo quedan ${product.cantidad} unidades!</p>
                 ` : ''}
             </div>

@@ -128,8 +128,36 @@ function renderGallery(images) {
 
     showImageByIndex(0);
 
+    // Renderizar thumbnails
+    const thumbnailsContainer = document.getElementById('thumbnails');
+    if (thumbnailsContainer) {
+        thumbnailsContainer.innerHTML = normalized.map((url, idx) => `
+            <button class="thumbnail ${idx === 0 ? 'active' : ''}" data-index="${idx}" aria-label="Ver imagen ${idx + 1}">
+                <img src="${url}" alt="Miniatura ${idx + 1}">
+            </button>
+        `).join('');
+
+        // Event listeners para thumbnails
+        thumbnailsContainer.querySelectorAll('.thumbnail').forEach((thumb) => {
+            thumb.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+                showImageByIndex(index);
+            });
+        });
+    }
+
+    // Event listeners para los botones de navegación
     if (ui.prevBtn) ui.prevBtn.onclick = () => showImageByIndex(state.currentIndex - 1);
     if (ui.nextBtn) ui.nextBtn.onclick = () => showImageByIndex(state.currentIndex + 1);
+
+    // Soporte para navegación con teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            showImageByIndex(state.currentIndex - 1);
+        } else if (e.key === 'ArrowRight') {
+            showImageByIndex(state.currentIndex + 1);
+        }
+    });
 }
 
 function renderPricing(product) {

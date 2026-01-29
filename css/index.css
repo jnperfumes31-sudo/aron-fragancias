@@ -63,13 +63,19 @@
     --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
 }
 
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     font-family: 'Outfit', sans-serif;
     background: var(--primary);
     color: var(--text-primary);
-    overflow-x: hidden;
     min-height: 100vh;
     position: relative;
+    overflow-x: hidden;
 }
 
 /* Animated Background */
@@ -89,10 +95,10 @@ body {
 .animated-bg::before {
     content: '';
     position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
     background: 
         repeating-linear-gradient(
             0deg,
@@ -113,7 +119,7 @@ body {
     }
 }
 
-/* Floating Orbs */
+/* Floating Orbs - AJUSTADOS para no salirse */
 .orb {
     position: absolute;
     border-radius: 50%;
@@ -123,26 +129,26 @@ body {
 }
 
 .orb-1 {
-    width: 300px;
-    height: 300px;
+    width: min(250px, 25vw);
+    height: min(250px, 25vw);
     background: radial-gradient(circle, var(--accent-1), transparent);
     top: 10%;
-    left: 10%;
+    left: 5%;
     animation-delay: 0s;
 }
 
 .orb-2 {
-    width: 250px;
-    height: 250px;
+    width: min(200px, 20vw);
+    height: min(200px, 20vw);
     background: radial-gradient(circle, var(--accent-2), transparent);
     top: 60%;
-    right: 15%;
+    right: 5%;
     animation-delay: 3s;
 }
 
 .orb-3 {
-    width: 200px;
-    height: 200px;
+    width: min(150px, 15vw);
+    height: min(150px, 15vw);
     background: radial-gradient(circle, var(--accent-3), transparent);
     bottom: 20%;
     left: 60%;
@@ -154,14 +160,14 @@ body {
         transform: translate(0, 0) scale(1);
     }
     33% {
-        transform: translate(30px, -30px) scale(1.1);
+        transform: translate(20px, -20px) scale(1.1);
     }
     66% {
-        transform: translate(-20px, 20px) scale(0.9);
+        transform: translate(-10px, 10px) scale(0.9);
     }
 }
 
-/* Container */
+/* Container - AJUSTADO para contener todo */
 .container {
     position: relative;
     z-index: 1;
@@ -170,21 +176,29 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
-/* Hero Section */
+/* Hero Section - AJUSTADO para no desbordar */
 .hero {
-    max-width: 1400px;
+    max-width: min(1200px, 90vw);
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    gap: clamp(2rem, 4vw, 3rem);
     align-items: center;
+    margin: 0 auto;
+    position: relative;
 }
 
 /* Left Content */
 .hero-content {
     animation: slideInLeft 1s ease-out;
+    position: relative;
+    z-index: 2;
 }
 
 @keyframes slideInLeft {
@@ -202,17 +216,18 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.6rem 1.2rem;
+    padding: clamp(0.5rem, 1.5vw, 0.6rem) clamp(1rem, 2vw, 1.2rem);
     background: linear-gradient(135deg, rgba(201, 162, 77, 0.15), rgba(212, 165, 116, 0.15));
     border: 1px solid rgba(201, 162, 77, 0.4);
     border-radius: 50px;
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 2rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
     backdrop-filter: blur(10px);
     animation: pulse-glow 3s ease-in-out infinite;
+    white-space: nowrap;
 }
 
 @keyframes pulse-glow {
@@ -226,16 +241,19 @@ body {
 
 .hero-title {
     font-family: 'Orbitron', sans-serif;
-    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 900;
     line-height: 1.1;
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
     background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     animation: gradient-shift 5s ease infinite;
     background-size: 200% 200%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 @keyframes gradient-shift {
@@ -248,23 +266,23 @@ body {
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
-    line-height: 1.8;
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    line-height: 1.6;
     color: var(--text-secondary);
-    margin-bottom: 3rem;
-    max-width: 600px;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    max-width: min(500px, 100%);
 }
 
 /* CTA Buttons */
 .cta-buttons {
     display: flex;
-    gap: 1.5rem;
+    gap: clamp(1rem, 2vw, 1.5rem);
     flex-wrap: wrap;
 }
 
 .btn {
-    padding: 1.2rem 2.5rem;
-    font-size: 1.05rem;
+    padding: clamp(0.9rem, 1.8vw, 1.1rem) clamp(1.5rem, 2.5vw, 2rem);
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
     font-weight: 700;
     border: none;
     border-radius: 50px;
@@ -272,12 +290,14 @@ body {
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: clamp(0.5rem, 1vw, 0.8rem);
     text-decoration: none;
     position: relative;
     overflow: hidden;
     letter-spacing: 1px;
     text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .btn-primary {
@@ -321,10 +341,14 @@ body {
     box-shadow: 0 10px 30px rgba(201, 162, 77, 0.3);
 }
 
-/* Right Visual */
+/* Right Visual - AJUSTADO para no desbordar */
 .hero-visual {
     position: relative;
     animation: slideInRight 1s ease-out;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    overflow: visible;
 }
 
 @keyframes slideInRight {
@@ -341,33 +365,36 @@ body {
 .perfume-showcase {
     position: relative;
     width: 100%;
-    height: 600px;
+    height: clamp(280px, 40vw, 500px);
     display: flex;
     align-items: center;
     justify-content: center;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .showcase-circle {
     position: absolute;
     border-radius: 50%;
     border: 2px solid rgba(201, 162, 77, 0.25);
+    max-width: 100%;
 }
 
 .circle-1 {
-    width: 500px;
-    height: 500px;
+    width: clamp(200px, 35vw, 400px);
+    height: clamp(200px, 35vw, 400px);
     animation: rotate-circle 20s linear infinite;
 }
 
 .circle-2 {
-    width: 400px;
-    height: 400px;
+    width: clamp(160px, 28vw, 320px);
+    height: clamp(160px, 28vw, 320px);
     animation: rotate-circle 15s linear infinite reverse;
 }
 
 .circle-3 {
-    width: 300px;
-    height: 300px;
+    width: clamp(120px, 22vw, 240px);
+    height: clamp(120px, 22vw, 240px);
     animation: rotate-circle 25s linear infinite;
 }
 
@@ -386,15 +413,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: auto;
 }
 
 .logo-aron {
-    width: 250px;
-    height: 250px;
+    width: clamp(120px, 25vw, 220px);
+    height: clamp(120px, 25vw, 220px);
     object-fit: contain;
     border-radius: 50%;
     animation: float-icon 4s ease-in-out infinite;
     filter: drop-shadow(0 0 30px var(--glow));
+    max-width: 100%;
 }
 
 @keyframes float-icon {
@@ -402,56 +432,74 @@ body {
         transform: translateY(0) rotate(0deg);
     }
     50% {
-        transform: translateY(-20px) rotate(5deg);
+        transform: translateY(-15px) rotate(5deg);
     }
 }
 
-/* Feature Cards */
+/* Feature Cards - CORREGIDAS para no salirse */
 .features {
     position: absolute;
     width: 100%;
     height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
 }
 
 .feature-card {
     position: absolute;
-    padding: 1rem 1.5rem;
+    padding: 0.8rem 1.2rem;
     background: rgba(42, 39, 35, 0.9);
     border: 1px solid rgba(201, 162, 77, 0.4);
     border-radius: 15px;
     backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     animation: float-card 3s ease-in-out infinite;
+    font-size: 0.85rem;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 3;
 }
 
 .feature-card i {
-    font-size: 2rem;
+    font-size: 1.2rem;
     color: var(--accent-1);
+    flex-shrink: 0;
 }
 
 .feature-card span {
     font-weight: 600;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.85rem;
 }
 
+/* POSICIONES AJUSTADAS para no salirse */
 .feature-1 {
-    top: 10%;
-    left: -10%;
+    top: 15%;
+    left: -10px;
     animation-delay: 0s;
 }
 
 .feature-2 {
-    top: 50%;
-    right: -15%;
+    top: 55%;
+    right: -10px;
     animation-delay: 1s;
 }
 
 .feature-3 {
-    bottom: 10%;
-    left: 0;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
     animation-delay: 2s;
+    min-width: 160px;
 }
 
 @keyframes float-card {
@@ -459,17 +507,19 @@ body {
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-15px);
+        transform: translateY(-10px);
     }
 }
 
-/* Stats Section */
+/* Stats Section - AJUSTADO para no desbordar */
 .stats {
-    margin-top: 4rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: clamp(1rem, 2vw, 1.5rem);
     animation: fadeInUp 1s ease-out 0.5s both;
+    width: 100%;
+    max-width: 100%;
 }
 
 @keyframes fadeInUp {
@@ -485,12 +535,14 @@ body {
 
 .stat-item {
     text-align: center;
-    padding: 2rem;
+    padding: clamp(1rem, 2vw, 1.5rem);
     background: rgba(42, 39, 35, 0.6);
     border: 1px solid rgba(201, 162, 77, 0.2);
     border-radius: 20px;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .stat-item:hover {
@@ -501,7 +553,7 @@ body {
 
 .stat-number {
     font-family: 'Orbitron', sans-serif;
-    font-size: 3rem;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
     font-weight: 900;
     background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
     -webkit-background-clip: text;
@@ -509,102 +561,240 @@ body {
     background-clip: text;
     display: block;
     margin-bottom: 0.5rem;
+    word-break: break-all;
 }
 
 .stat-label {
     color: var(--text-secondary);
-    font-size: 0.95rem;
+    font-size: clamp(0.7rem, 1.3vw, 0.85rem);
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
+/* ============ RESPONSIVE DESIGN ============ */
+
+/* Desktop grande - pero con límites */
+@media (min-width: 1200px) {
     .hero {
-        grid-template-columns: 1fr;
-        gap: 3rem;
+        max-width: 1200px;
+        padding: 0 2rem;
     }
-
-    .perfume-showcase {
-        height: 400px;
+    
+    .feature-1 {
+        left: -20px;
     }
-
-    .circle-1 { width: 350px; height: 350px; }
-    .circle-2 { width: 280px; height: 280px; }
-    .circle-3 { width: 210px; height: 210px; }
-
-    .perfume-icon {
-        font-size: 8rem;
-    }
-
-    .feature-card {
-        display: none;
+    
+    .feature-2 {
+        right: -20px;
     }
 }
 
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 3rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.1rem;
-    }
-
-    .cta-buttons {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .stats {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .perfume-showcase {
-        height: 350px;
-    }
-
-    .circle-1 { width: 280px; height: 280px; }
-    .circle-2 { width: 220px; height: 220px; }
-    .circle-3 { width: 160px; height: 160px; }
-
-    .perfume-icon {
-        font-size: 6rem;
-    }
-}
-
-@media (max-width: 480px) {
+/* Tablet Landscape - 1024px y menos */
+@media (max-width: 1024px) {
     .container {
         padding: 1.5rem;
     }
 
-    .hero-title {
-        font-size: 2.5rem;
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: clamp(2rem, 3vw, 2.5rem);
+        max-width: min(800px, 90vw);
     }
 
-    .badge {
-        font-size: 0.75rem;
-        padding: 0.5rem 1rem;
+    .hero-content {
+        order: 2;
+    }
+
+    .hero-visual {
+        order: 1;
+        max-width: min(600px, 90vw);
+        margin: 0 auto;
+    }
+
+    .cta-buttons {
+        justify-content: center;
+    }
+
+    .perfume-showcase {
+        height: clamp(250px, 35vw, 400px);
+    }
+
+    .feature-card {
+        position: relative;
+        display: inline-block;
+        margin: 0.5rem;
+        max-width: 160px;
+    }
+
+    .features {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        height: auto;
+    }
+
+    .feature-1, .feature-2, .feature-3 {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        transform: none;
+        margin: 0.5rem;
+    }
+}
+
+/* Tablet - 768px y menos */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .hero-subtitle {
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        line-height: 1.5;
     }
 
     .btn {
-        padding: 1rem 2rem;
-        font-size: 0.95rem;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        justify-content: center;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .perfume-showcase {
+        height: clamp(200px, 40vw, 350px);
+    }
+
+    .circle-1 {
+        width: clamp(160px, 30vw, 280px);
+        height: clamp(160px, 30vw, 280px);
+    }
+    
+    .circle-2 {
+        width: clamp(130px, 25vw, 220px);
+        height: clamp(130px, 25vw, 220px);
+    }
+    
+    .circle-3 {
+        width: clamp(100px, 20vw, 180px);
+        height: clamp(100px, 20vw, 180px);
+    }
+
+    .logo-aron {
+        width: clamp(100px, 20vw, 180px);
+        height: clamp(100px, 20vw, 180px);
+    }
+
+    .features {
+        display: none; /* Ocultamos en móvil para más espacio */
+    }
+}
+
+/* Mobile - 480px y menos */
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem 0.75rem;
+    }
+
+    .hero {
+        gap: 1.5rem;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .hero-title {
+        font-size: clamp(1.8rem, 7vw, 2.2rem);
+        line-height: 1.2;
+    }
+
+    .hero-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.85rem;
+        max-width: 100%;
+    }
+
+    .perfume-showcase {
+        height: 200px;
+    }
+
+    .circle-1 { width: 160px; height: 160px; }
+    .circle-2 { width: 130px; height: 130px; }
+    .circle-3 { width: 100px; height: 100px; }
+
+    .logo-aron {
+        width: 90px;
+        height: 90px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+        margin-top: 2rem;
+        gap: 0.75rem;
     }
 
     .stat-number {
-        font-size: 2.5rem;
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+}
+
+/* Mobile muy pequeño - 320px y menos */
+@media (max-width: 320px) {
+    .hero-title {
+        font-size: 1.6rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .btn {
+        padding: 0.7rem 1rem;
+        font-size: 0.75rem;
+    }
+
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
     }
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -624,4 +814,28 @@ body {
 ::selection {
     background: var(--accent-1);
     color: var(--primary);
+}
+
+/* Prevenir desbordamiento horizontal */
+img, svg, video, canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Asegurar que los textos largos se rompan */
+h1, h2, h3, h4, h5, h6, p, span, a {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Evitar zoom en iOS */
+input, textarea, select, button {
+    font-size: 16px;
+}
+
+/* Forzar que nada se salga */
+* {
+    max-width: 100%;
+    box-sizing: border-box;
 }
