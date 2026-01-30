@@ -1572,11 +1572,18 @@ body::before {
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    transition: var(--transition);
 }
 
 .remove-btn {
-    background: #ff4757;
-    color: white;
+    background: linear-gradient(135deg, #ff4757, #d63031);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+}
+
+.remove-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(255, 71, 87, 0.5);
 }
 
 .cart-form {
