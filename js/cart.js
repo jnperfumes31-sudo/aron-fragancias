@@ -10,14 +10,49 @@ function saveCart(cart) {
     updateCartCount();
 }
 
-function addToCart(id, name, price, image) {
+function normalizeStockLimit(quantity) {
+    if (quantity === null || quantity === undefined || quantity === '') return null;
+    const parsed = Number(quantity);
+    if (!Number.isFinite(parsed)) return null;
+    if (parsed <= 0) return 0;
+    return Math.floor(parsed);
+}
+
+function addToCart(id, name, price, image, maxQuantity) {
     const cart = getCart();
+    const stockLimit = normalizeStockLimit(maxQuantity);
+
+    if (stockLimit === 0) {
+        showNotification('Este producto no tiene stock disponible');
+        return;
+    }
+
     const existing = cart.find(item => item.id === id);
+
     if (existing) {
+        if (stockLimit !== null) {
+            existing.stock = stockLimit;
+        }
+
+        const limit = typeof existing.stock === 'number' ? existing.stock : null;
+        if (limit !== null && existing.quantity >= limit) {
+            const unitsLabel = limit === 1 ? 'unidad' : 'unidades';
+            showNotification(`Solo hay ${limit} ${unitsLabel} disponibles de este producto`);
+            return;
+        }
+
         existing.quantity += 1;
     } else {
-        cart.push({ id, name, price, image, quantity: 1 });
+        cart.push({
+            id,
+            name,
+            price,
+            image,
+            quantity: 1,
+            stock: stockLimit,
+        });
     }
+
     saveCart(cart);
     showNotification('Producto agregado al carrito');
 }
@@ -83,27 +118,43 @@ function renderCartItems() {
         return;
     }
 
-    cartItemsEl.innerHTML = cart.map(item => `
+    cartItemsEl.innerHTML = cart.map(item => {
+        const limit = typeof item.stock === 'number' ? item.stock : null;
+        const maxReached = limit !== null && item.quantity >= limit;
+        const stockInfo = limit !== null
+            ? `<p class="cart-item-stock">Stock disponible: ${limit}</p>`
+            : '';
+
+        return `
         <div class="cart-item">
             <img src="${item.image}" alt="${item.name}" class="cart-item-image">
             <div class="cart-item-info">
                 <h4>${item.name}</h4>
                 <p>$${item.price} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</p>
+                ${stockInfo}
             </div>
             <div class="cart-item-controls">
                 <button onclick="changeQuantity('${item.id}', -1)">-</button>
                 <span>${item.quantity}</span>
-                <button onclick="changeQuantity('${item.id}', 1)">+</button>
+                <button onclick="changeQuantity('${item.id}', 1)" ${maxReached ? 'disabled' : ''}>+</button>
                 <button onclick="removeFromCart('${item.id}')" class="remove-btn">×</button>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function changeQuantity(id, delta) {
     const cart = getCart();
     const item = cart.find(i => i.id === id);
     if (item) {
+        const limit = typeof item.stock === 'number' ? item.stock : null;
+        if (delta > 0 && limit !== null && item.quantity >= limit) {
+            const unitsLabel = limit === 1 ? 'unidad' : 'unidades';
+            showNotification(`Solo hay ${limit} ${unitsLabel} disponibles de este producto`);
+            return;
+        }
+
         item.quantity += delta;
         if (item.quantity <= 0) {
             removeFromCart(id);

@@ -120,13 +120,15 @@ function createProductCard(product) {
     const imageUrl = product.producto_imagenes && product.producto_imagenes.length > 0 
         ? getImageUrl(product.producto_imagenes[0].url)
         : '';
-    const inStock = product.disponible === true && (product.cantidad || 0) > 0;
+    const availableStock = parseStockValue(product.cantidad);
+    const hasFiniteStock = availableStock !== null;
+    const inStock = product.disponible === true && (!hasFiniteStock || availableStock > 0);
     const productCategory = getProductCategory(product);
     const categoryClass = getCategoryClass(productCategory);
     
     // Datos de descuento
     const tieneDescuento = product.tiene_descuento === true;
-    const esAgotado = product.agotado === true;
+    const esAgotado = product.agotado === true || !inStock;
     const descuentoValor = product.descuento_valor || 0;
     const descuentoTipo = product.descuento_tipo || 'none';
     
@@ -195,7 +197,7 @@ function createProductCard(product) {
                     <div class="product-buttons">
                         <button 
                             class="add-to-cart-btn ${esAgotado ? 'disabled' : ''}"
-                            onclick="addToCart('${String(product.id).replace(/'/g, "\\'")}', '${String(product.nombre || product.name).replace(/'/g, "\\'")}', ${precioFinal}, '${imageUrl}')"
+                            onclick="addToCart('${String(product.id).replace(/'/g, "\\'")}', '${String(product.nombre || product.name).replace(/'/g, "\\'")}', ${precioFinal}, '${imageUrl}', ${hasFiniteStock ? availableStock : 'null'})"
                             ${esAgotado ? 'disabled' : ''}
                         >
                             ${esAgotado ? 'AGOTADO' : '<i class="fas fa-cart-plus"></i>'}
@@ -211,8 +213,8 @@ function createProductCard(product) {
                     </div>
                 </div>
                 
-                ${(product.cantidad || 0) <= 5 && (product.cantidad || 0) > 0 && !esAgotado ? `
-                    <p class="low-stock-warning">¡Solo quedan ${product.cantidad} unidades!</p>
+                ${hasFiniteStock && availableStock <= 5 && availableStock > 0 && !esAgotado ? `
+                    <p class="low-stock-warning">¡Solo quedan ${availableStock} unidades!</p>
                 ` : ''}
             </div>
         </div>
@@ -312,6 +314,12 @@ function truncateText(text, maxLength) {
 
 function updateProductsCount(count) {
     productsCount.textContent = `${count} producto${count !== 1 ? 's' : ''} encontrado${count !== 1 ? 's' : ''}`;
+}
+
+function parseStockValue(value) {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
 }
 
 function showLoading() {

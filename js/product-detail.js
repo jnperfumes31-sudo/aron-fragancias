@@ -66,11 +66,19 @@ function formatPrice(price) {
     return new Intl.NumberFormat('es-MX', opts).format(num);
 }
 
+function parseStockValue(value) {
+    if (value === null || value === undefined || value === '') return null;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+}
+
 function renderQuickDetails(product, priceDisplay) {
     if (!ui.quickDetails) return;
+    const stockValue = parseStockValue(product.cantidad);
+    const stockText = stockValue === null ? 'N/D' : stockValue;
     const rows = [
         { icon: 'fa-badge-percent', text: priceDisplay },
-        { icon: 'fa-box', text: `Stock: ${product.cantidad ?? 'N/D'}` },
+        { icon: 'fa-box', text: `Stock: ${stockText}` },
         { icon: 'fa-tags', text: `Categoria: ${getCategory(product) || 'Sin categoria'}` },
     ];
 
@@ -128,7 +136,6 @@ function renderGallery(images) {
 
     showImageByIndex(0);
 
-    // Renderizar thumbnails
     const thumbnailsContainer = document.getElementById('thumbnails');
     if (thumbnailsContainer) {
         thumbnailsContainer.innerHTML = normalized.map((url, idx) => `
@@ -137,7 +144,6 @@ function renderGallery(images) {
             </button>
         `).join('');
 
-        // Event listeners para thumbnails
         thumbnailsContainer.querySelectorAll('.thumbnail').forEach((thumb) => {
             thumb.addEventListener('click', (e) => {
                 const index = parseInt(e.currentTarget.getAttribute('data-index'), 10);
@@ -146,11 +152,9 @@ function renderGallery(images) {
         });
     }
 
-    // Event listeners para los botones de navegación
     if (ui.prevBtn) ui.prevBtn.onclick = () => showImageByIndex(state.currentIndex - 1);
     if (ui.nextBtn) ui.nextBtn.onclick = () => showImageByIndex(state.currentIndex + 1);
 
-    // Soporte para navegación con teclado
     document.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') {
             showImageByIndex(state.currentIndex - 1);
@@ -171,7 +175,7 @@ function renderPricing(product) {
     if (hasDiscount) {
         ui.originalPrice.textContent = `$${formatPrice(base)}`;
         ui.discountChip.style.display = 'inline-flex';
-        ui.discountChip.textContent = `- ${discount}%`; 
+        ui.discountChip.textContent = `- ${discount}%`;
         ui.discountBadge.textContent = `-${discount}%`;
         ui.discountBadge.style.display = 'block';
     } else {
@@ -183,9 +187,10 @@ function renderPricing(product) {
     renderQuickDetails(product, `Precio final: $${formatPrice(finalPrice)}`);
 }
 
-function renderAvailability(product) {
-    const stock = product.cantidad ?? 0;
-    const inStock = product.disponible === true && stock > 0;
+function renderAvailability(product, stockValue = parseStockValue(product.cantidad)) {
+    const hasFiniteStock = stockValue !== null;
+    const inStock = product.disponible === true && (!hasFiniteStock || stockValue > 0);
+    const stockDisplay = hasFiniteStock ? stockValue : (inStock ? 'N/D' : 0);
 
     ui.stockBadge.textContent = inStock ? 'Disponible' : 'Agotado';
     ui.stockBadge.style.background = inStock ? 'rgba(201, 162, 77, 0.9)' : 'rgba(255, 99, 71, 0.9)';
@@ -193,7 +198,7 @@ function renderAvailability(product) {
     ui.availability.textContent = inStock ? 'En stock' : 'No disponible';
     ui.availability.classList.toggle('soldout', !inStock);
 
-    ui.stockCount.textContent = inStock ? stock : '0';
+    ui.stockCount.textContent = stockDisplay;
 
     ui.addToCartBtn.disabled = !inStock;
     ui.addToCartBtn.textContent = inStock ? 'Agregar al carrito' : 'Sin stock';
@@ -202,6 +207,7 @@ function renderAvailability(product) {
 function renderProduct(product) {
     state.product = product;
     const category = getCategory(product);
+    const stockLimit = parseStockValue(product.cantidad);
 
     ui.breadcrumbName.textContent = product.nombre || product.name || 'Producto';
     ui.productName.textContent = product.nombre || product.name || 'Producto';
@@ -212,16 +218,16 @@ function renderProduct(product) {
 
     renderGallery(product.producto_imagenes || []);
     renderPricing(product);
-    renderAvailability(product);
+    renderAvailability(product, stockLimit);
 
     const categoryClass = getCategoryClass(category);
     ui.categoryTag.classList.remove('cat-male', 'cat-female', 'cat-unisex', 'cat-niche', 'cat-default');
     ui.categoryTag.classList.add(categoryClass);
 
     ui.addToCartBtn.onclick = () => {
-        const price = product.tiene_descuento && product.descuento_valor ? 
+        const price = product.tiene_descuento && product.descuento_valor ?
             (product.precio * (1 - product.descuento_valor / 100)) : product.precio;
-        addToCart(product.id, product.nombre || product.name, price, state.mainImageUrl);
+        addToCart(product.id, product.nombre || product.name, price, state.mainImageUrl, stockLimit);
     };
 
     ui.contactBtn.onclick = () => {
