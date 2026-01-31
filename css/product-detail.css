@@ -416,14 +416,25 @@ body::before {
     font-size: 2rem;
     line-height: 1.1;
     letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
 }
 
 .description {
-    color: var(--text-secondary);
+    color: white;
     line-height: 1.6;
     font-size: 1rem;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    font-family: 'Outfit', sans-serif;
 }
-
 .price-block {
     display: flex;
     align-items: center;
