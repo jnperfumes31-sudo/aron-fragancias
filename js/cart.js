@@ -1,5 +1,9 @@
 // cart.js - Funciones del carrito de compras
 
+function formatPrice(price) {
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price);
+}
+
 // Funciones del carrito
 function getCart() {
     return JSON.parse(localStorage.getItem('cart')) || [];
@@ -118,6 +122,8 @@ function renderCartItems() {
         return;
     }
 
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
     cartItemsEl.innerHTML = cart.map(item => {
         const limit = typeof item.stock === 'number' ? item.stock : null;
         const maxReached = limit !== null && item.quantity >= limit;
@@ -130,7 +136,7 @@ function renderCartItems() {
             <img src="${item.image}" alt="${item.name}" class="cart-item-image">
             <div class="cart-item-info">
                 <h4>${item.name}</h4>
-                <p>$${item.price} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</p>
+                <p>${formatPrice(item.price)} x ${item.quantity} = ${formatPrice(item.price * item.quantity)}</p>
                 ${stockInfo}
             </div>
             <div class="cart-item-controls">
@@ -141,7 +147,11 @@ function renderCartItems() {
             </div>
         </div>
     `;
-    }).join('');
+    }).join('') + `
+        <div class="cart-total">
+            <h3>Total: ${formatPrice(total)}</h3>
+        </div>
+    `;
 }
 
 function changeQuantity(id, delta) {
@@ -220,7 +230,7 @@ function handleFormSubmit(e) {
     const cart = getCart();
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    const message = `Hola, quiero comprar los siguientes productos:\n\n${cart.map(item => `- ${item.name} x${item.quantity} = $${(item.price * item.quantity).toFixed(2)}`).join('\n')}\n\nTotal: $${total.toFixed(2)}\n\nCliente: ${name}\nTeléfono: ${phone}\nEmail: ${email}\nDirección: ${address}`;
+    const message = `Hola, quiero comprar los siguientes productos:\n\n${cart.map(item => `- ${item.name} x${item.quantity} = ${formatPrice(item.price * item.quantity)}`).join('\n')}\n\nTotal: ${formatPrice(total)}\n\nCliente: ${name}\nTeléfono: ${phone}\nEmail: ${email}\nDirección: ${address}`;
 
     const whatsappUrl = `https://wa.me/573222755651?text=${encodeURIComponent(message)}`; // Replace with actual number
     window.open(whatsappUrl, '_blank');

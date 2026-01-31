@@ -189,7 +189,7 @@ function renderPricing(product) {
 
 function renderAvailability(product, stockValue = parseStockValue(product.cantidad)) {
     const hasFiniteStock = stockValue !== null;
-    const inStock = product.disponible === true && (!hasFiniteStock || stockValue > 0);
+    const inStock = product.disponible === true && !product.agotado && (!hasFiniteStock || stockValue > 0);
     const stockDisplay = hasFiniteStock ? stockValue : (inStock ? 'N/D' : 0);
 
     ui.stockBadge.textContent = inStock ? 'Disponible' : 'Agotado';
@@ -202,6 +202,11 @@ function renderAvailability(product, stockValue = parseStockValue(product.cantid
 
     ui.addToCartBtn.disabled = !inStock;
     ui.addToCartBtn.textContent = inStock ? 'Agregar al carrito' : 'Sin stock';
+    ui.addToCartBtn.classList.toggle('disabled', !inStock);
+
+    ui.contactBtn.disabled = !inStock;
+    ui.contactBtn.textContent = inStock ? 'Consultar disponibilidad' : 'Producto agotado';
+    ui.contactBtn.classList.toggle('disabled', !inStock);
 }
 
 function renderProduct(product) {

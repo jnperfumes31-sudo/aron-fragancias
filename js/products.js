@@ -204,11 +204,10 @@ function createProductCard(product) {
                         </button>
 
                         <button 
-                            class="view-detail-btn ${esAgotado ? 'disabled' : ''}"
+                            class="view-detail-btn"
                             onclick="goToProductDetail('${String(product.id).replace(/'/g, "\\'")}')"
-                            ${esAgotado ? 'disabled' : ''}
                         >
-                            ${esAgotado ? 'AGOTADO' : 'Ver detalle'}
+                            Ver detalle
                         </button>
                     </div>
                 </div>

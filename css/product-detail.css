@@ -808,7 +808,7 @@ body::before {
     }
 
     .main-content {
-        padding: 2rem 0 3rem;
+        padding: 2rem 0;
     }
 
     .breadcrumb {
@@ -951,7 +951,7 @@ body::before {
 @media (max-width: 767px) and (min-width: 481px) {
     .container {
         max-width: 100%;
-        padding: 0 0.9rem;
+        padding: 0 1rem;
     }
 
     .header {
@@ -959,7 +959,8 @@ body::before {
     }
 
     .header-content {
-        gap: 0.6rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
 
     .logo {
@@ -978,7 +979,7 @@ body::before {
     }
 
     .nav-link {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         letter-spacing: 0;
         gap: 0.3rem;
     }
@@ -988,7 +989,7 @@ body::before {
     }
 
     .main-content {
-        padding: 1.75rem 0 2.5rem;
+        padding: 1.5rem 0;
     }
 
     .breadcrumb {
@@ -1181,8 +1182,8 @@ body::before {
     }
 
     .main-content {
-        padding: 0.75rem 0 1.25rem;
-        min-height: calc(100vh - 70px);
+        padding: 1rem 0;
+        min-height: calc(100vh - 60px);
     }
 
     .breadcrumb {
