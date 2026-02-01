@@ -72,6 +72,44 @@ function parseStockValue(value) {
     return Number.isFinite(parsed) ? parsed : null;
 }
 
+function getDiscountInfo(product) {
+    const precioOriginal = Number(product.precio ?? product.price ?? 0);
+    const rawValue = Number(product.descuento_valor ?? product.descuento ?? product.oferta ?? 0);
+    const tipo = String(product.descuento_tipo || 'porcentaje').toLowerCase();
+    const toggle = product.tiene_descuento;
+    const aplica = toggle === false ? false : (rawValue > 0 && precioOriginal > 0);
+
+    if (!aplica) {
+        return {
+            precioOriginal,
+            precioFinal: precioOriginal,
+            porcentaje: 0,
+            aplica: false,
+        };
+    }
+
+    let precioFinal;
+    let porcentaje;
+
+    if (tipo === 'monto') {
+        precioFinal = precioOriginal - rawValue;
+        porcentaje = precioOriginal > 0 ? Math.round((rawValue / precioOriginal) * 100) : 0;
+    } else {
+        porcentaje = rawValue;
+        precioFinal = precioOriginal * (1 - rawValue / 100);
+    }
+
+    precioFinal = Math.max(0, Number.isFinite(precioFinal) ? precioFinal : precioOriginal);
+    porcentaje = Math.max(0, Math.min(100, Number.isFinite(porcentaje) ? Math.round(porcentaje) : 0));
+
+    return {
+        precioOriginal,
+        precioFinal,
+        porcentaje,
+        aplica: true,
+    };
+}
+
 function renderQuickDetails(product, priceDisplay) {
     if (!ui.quickDetails) return;
     const stockValue = parseStockValue(product.cantidad);
@@ -165,18 +203,20 @@ function renderGallery(images) {
 }
 
 function renderPricing(product) {
-    const base = product.precio || product.price || 0;
-    const discount = product.descuento || product.oferta || 0;
-    const hasDiscount = Number(discount) > 0;
-    const finalPrice = hasDiscount ? base - (base * discount / 100) : base;
+    const pricing = getDiscountInfo(product);
+    ui.currentPrice.textContent = `$${formatPrice(pricing.precioFinal)}`;
 
-    ui.currentPrice.textContent = `$${formatPrice(finalPrice)}`;
-
-    if (hasDiscount) {
-        ui.originalPrice.textContent = `$${formatPrice(base)}`;
+    if (pricing.aplica && pricing.porcentaje > 0) {
+        ui.originalPrice.textContent = `$${formatPrice(pricing.precioOriginal)}`;
         ui.discountChip.style.display = 'inline-flex';
-        ui.discountChip.textContent = `- ${discount}%`;
-        ui.discountBadge.textContent = `-${discount}%`;
+        ui.discountChip.textContent = `- ${pricing.porcentaje}%`;
+        ui.discountBadge.textContent = `-${pricing.porcentaje}%`;
+        ui.discountBadge.style.display = 'block';
+    } else if (pricing.aplica) {
+        ui.originalPrice.textContent = `$${formatPrice(pricing.precioOriginal)}`;
+        ui.discountChip.style.display = 'inline-flex';
+        ui.discountChip.textContent = 'Precio especial';
+        ui.discountBadge.textContent = 'Oferta';
         ui.discountBadge.style.display = 'block';
     } else {
         ui.originalPrice.textContent = '';
@@ -184,7 +224,7 @@ function renderPricing(product) {
         ui.discountBadge.style.display = 'none';
     }
 
-    renderQuickDetails(product, `Precio final: $${formatPrice(finalPrice)}`);
+    return pricing;
 }
 
 function renderAvailability(product, stockValue = parseStockValue(product.cantidad)) {
@@ -213,6 +253,7 @@ function renderProduct(product) {
     state.product = product;
     const category = getCategory(product);
     const stockLimit = parseStockValue(product.cantidad);
+    const pricing = renderPricing(product);
 
     ui.breadcrumbName.textContent = product.nombre || product.name || 'Producto';
     ui.productName.textContent = product.nombre || product.name || 'Producto';
@@ -222,17 +263,21 @@ function renderProduct(product) {
     ui.saleType.textContent = product.tipo_venta || 'Sin dato';
 
     renderGallery(product.producto_imagenes || []);
-    renderPricing(product);
     renderAvailability(product, stockLimit);
+    renderQuickDetails(product, `Precio final: $${formatPrice(pricing.precioFinal)}`);
 
     const categoryClass = getCategoryClass(category);
     ui.categoryTag.classList.remove('cat-male', 'cat-female', 'cat-unisex', 'cat-niche', 'cat-default');
     ui.categoryTag.classList.add(categoryClass);
 
     ui.addToCartBtn.onclick = () => {
-        const price = product.tiene_descuento && product.descuento_valor ?
-            (product.precio * (1 - product.descuento_valor / 100)) : product.precio;
-        addToCart(product.id, product.nombre || product.name, price, state.mainImageUrl, stockLimit);
+        addToCart(
+            product.id,
+            product.nombre || product.name,
+            pricing.precioFinal,
+            state.mainImageUrl,
+            stockLimit
+        );
     };
 
     ui.contactBtn.onclick = () => {
