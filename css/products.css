@@ -541,7 +541,6 @@ body::after {
 }
 
 .search-btn:hover {
-    transform: translateY(-3px) rotate(90deg);
     box-shadow: 0 15px 40px rgba(201, 162, 77, 0.6);
 }
 
