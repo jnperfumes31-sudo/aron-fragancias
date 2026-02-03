@@ -490,6 +490,7 @@ body::after {
     gap: 2rem;
     backdrop-filter: blur(20px);
     box-shadow: 0 10px 40px rgba(201, 162, 77, 0.15);
+    align-items: center;
 }
 
 /* Search Container */
@@ -498,6 +499,7 @@ body::after {
     gap: 1rem;
     max-width: 600px;
     align-items: center;
+    justify-content: center;
 }
 
 .search-input {
@@ -549,6 +551,7 @@ body::after {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .filter-btn {
