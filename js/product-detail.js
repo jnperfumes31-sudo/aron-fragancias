@@ -102,6 +102,16 @@ function getDiscountInfo(product) {
     precioFinal = Math.max(0, Number.isFinite(precioFinal) ? precioFinal : precioOriginal);
     porcentaje = Math.max(0, Math.min(100, Number.isFinite(porcentaje) ? Math.round(porcentaje) : 0));
 
+    // Si el descuento hace que el precio final sea 0 o negativo, no aplicar descuento
+    if (precioFinal <= 0) {
+        return {
+            precioOriginal,
+            precioFinal: precioOriginal,
+            porcentaje: 0,
+            aplica: false,
+        };
+    }
+
     return {
         precioOriginal,
         precioFinal,

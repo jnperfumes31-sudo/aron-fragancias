@@ -109,6 +109,11 @@ function calcDiscount(product) {
     // Precio final nunca puede ser negativo
     precioFinal = Math.max(0, precioFinal);
 
+    // Si el descuento hace que el precio final sea 0 o negativo, no aplicar descuento
+    if (precioFinal <= 0) {
+        return { precioOriginal, precioFinal: precioOriginal, porcentaje: 0 };
+    }
+
     return { precioOriginal, precioFinal, porcentaje };
 }
 
