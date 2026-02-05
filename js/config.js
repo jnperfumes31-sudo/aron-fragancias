@@ -1,9 +1,6 @@
 // Configuración de Supabase
 const SUPABASE_URL = 'https://otlynjzdpyugesqmptcb.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90bHluanpkcHl1Z2VzcW1wdGNiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODA4MTA5MCwiZXhwIjoyMDgzNjU3MDkwfQ.iURXSA3Cc9rIawkREfxP_SK0tr4NvCR2Zx4nq4mwD2A';
-
-// Configuración de Cloudflare R2
-const R2_BASE_URL = 'https://pub-9f8783e25b4a4740aa06141ce640d277.r2.dev';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90bHluanpkcHl1Z2VzcW1wdGNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgwODEwOTAsImV4cCI6MjA4MzY1NzA5MH0.RtJEeFxX6S314z2wrGrK3LrGTJbky_RZAgdfaxlS3HU';
 
 // Inicializar cliente de Supabase
 let supabaseClient;
@@ -26,7 +23,7 @@ function getImageUrl(imagePath) {
     // Eliminar barras al inicio si existen
     const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
     
-    // Codificar la ruta y construir la URL con R2
+    // Codificar la ruta
     const encodedPath = cleanPath.replace(/ /g, '%20');
-    return `${R2_BASE_URL}/${encodedPath}`;
+    return `${encodedPath}`;
 }
