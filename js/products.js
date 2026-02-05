@@ -99,8 +99,12 @@ function calcDiscount(product) {
             precioFinal = precioOriginal - valor;
             porcentaje  = Math.round((valor / precioOriginal) * 100);
             break;
+        case 'fixed':
+            precioFinal = valor;
+            porcentaje  = Math.round(((precioOriginal - valor) / precioOriginal) * 100);
+            break;
         case 'porcentaje':
-        default:                          // tipo desconocido → asumir porcentaje
+        default:
             porcentaje  = valor;
             precioFinal = precioOriginal * (1 - valor / 100);
             break;

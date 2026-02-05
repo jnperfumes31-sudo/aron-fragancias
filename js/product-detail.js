@@ -94,6 +94,9 @@ function getDiscountInfo(product) {
     if (tipo === 'monto') {
         precioFinal = precioOriginal - rawValue;
         porcentaje = precioOriginal > 0 ? Math.round((rawValue / precioOriginal) * 100) : 0;
+    } else if (tipo === 'fixed') {
+        precioFinal = rawValue;
+        porcentaje = precioOriginal > 0 ? Math.round(((precioOriginal - rawValue) / precioOriginal) * 100) : 0;
     } else {
         porcentaje = rawValue;
         precioFinal = precioOriginal * (1 - rawValue / 100);
