@@ -232,7 +232,7 @@ function handleFormSubmit(e) {
 
     const message = `Hola, quiero comprar los siguientes productos:\n\n${cart.map(item => `- ${item.name} x${item.quantity} = ${formatPrice(item.price * item.quantity)}`).join('\n')}\n\nTotal: ${formatPrice(total)}\n\nCliente: ${name}\nTeléfono: ${phone}\nEmail: ${email}\nDirección: ${address}`;
 
-    const whatsappUrl = `https://wa.me/573222755651?text=${encodeURIComponent(message)}`; // Replace with actual number
+    const whatsappUrl = `https://wa.me/573188014404?text=${encodeURIComponent(message)}`; // Replace with actual number
     window.open(whatsappUrl, '_blank');
     clearCart();
     closeCart();

@@ -292,7 +292,7 @@ function renderProduct(product) {
 
     ui.contactBtn.onclick = () => {
         const text = encodeURIComponent(`Hola, quiero consultar disponibilidad de ${product.nombre || product.name}.`);
-        window.open(`https://wa.me/?text=${text}`, '_blank');
+        window.open(`https://wa.me/573188014404?text=${text}`, '_blank');
     };
 
     showContent();
