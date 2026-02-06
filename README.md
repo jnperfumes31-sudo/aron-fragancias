@@ -1,4 +1,4 @@
-# Aron Fragancias - E-commerce de Perfumes
+# Aron Fragancias - e-commerce de Perfumes
 
 Sitio web de e-commerce para venta de perfumes utilizando Supabase como base de datos y Cloudflare R2 para almacenamiento de imágenes.
 
