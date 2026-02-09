@@ -850,3 +850,1274 @@ input, textarea, select, button {
     max-width: 100%;
     box-sizing: border-box;
 }
+/* Modal styles for Singler popup - VERSIÓN SIN SCROLL CON BOTONES OPTIMIZADOS */
+.singler-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg, 
+        rgba(26, 24, 23, 0.92) 0%, 
+        rgba(15, 13, 11, 0.96) 50%, 
+        rgba(10, 8, 6, 0.98) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(6px);
+    padding: 16px;
+    overflow: hidden; /* Prevenir scroll en overlay */
+}
+
+.singler-modal-overlay[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.singler-modal {
+    background: linear-gradient(165deg, 
+        rgba(42, 39, 35, 0.98) 0%, 
+        rgba(58, 53, 49, 0.98) 50%, 
+        rgba(26, 24, 23, 0.98) 100%);
+    border: 1px solid;
+    border-image: linear-gradient(135deg, 
+        rgba(201, 162, 77, 0.2) 0%, 
+        rgba(201, 162, 77, 0.1) 50%, 
+        rgba(212, 165, 116, 0.05) 100%) 1;
+    padding: 0;
+    border-radius: 20px;
+    max-width: 780px;
+    width: min(94%, 780px);
+    color: var(--cream);
+    box-shadow: 
+        0 25px 60px -12px rgba(0, 0, 0, 0.8),
+        0 12px 32px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    position: relative;
+    transform: translateY(30px) scale(0.95);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.4s ease;
+    opacity: 0;
+    overflow: hidden; /* Cambiado de auto a hidden */
+    max-height: calc(100vh - 32px); /* Altura máxima basada en viewport */
+    display: flex;
+    flex-direction: column;
+}
+
+.singler-modal-overlay[aria-hidden="false"] .singler-modal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* HEADER - No sticky para evitar scroll */
+.singler-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid rgba(201, 162, 77, 0.12);
+    background: inherit; /* Heredar fondo en lugar de sticky */
+    border-radius: 20px 20px 0 0;
+    flex-shrink: 0; /* Evitar que se encoja */
+}
+
+.singler-modal-badge {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--amber) 100%);
+    color: var(--text-dark);
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(201, 162, 77, 0.4);
+    border: 1px solid rgba(212, 165, 116, 0.3);
+}
+
+.singler-modal-close {
+    position: relative;
+    background: rgba(201, 162, 77, 0.08);
+    border: 1px solid rgba(201, 162, 77, 0.18);
+    color: var(--gold-accent);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.singler-modal-close:hover {
+    background: rgba(201, 162, 77, 0.18);
+    color: var(--gold-light);
+    transform: rotate(90deg);
+}
+
+/* BODY - Contenido principal */
+.singler-modal-body {
+    padding: 1.5rem 2rem 2rem;
+    overflow: visible; /* Asegurar que no tenga scroll */
+    flex: 1; /* Tomar espacio disponible */
+    display: flex;
+    flex-direction: column;
+}
+
+.singler-modal-icon {
+    font-size: 2.8rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    color: var(--gold);
+    flex-shrink: 0;
+}
+
+.singler-modal-title {
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--cream);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    word-wrap: break-word;
+    flex-shrink: 0;
+}
+
+.singler-title-highlight {
+    background: linear-gradient(135deg, var(--vanilla) 0%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+.singler-modal-subtitle {
+    text-align: center;
+    color: var(--jasmine);
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    margin-bottom: 1rem;
+    line-height: 1.45;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    word-wrap: break-word;
+    flex-shrink: 0;
+}
+
+/* BENEFICIOS - Optimizado para no desbordar */
+.singler-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+    flex-shrink: 0;
+}
+
+.singler-benefit-card {
+    background: rgba(201, 162, 77, 0.06);
+    border: 1px solid rgba(201, 162, 77, 0.12);
+    border-radius: 14px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.singler-benefit-card:hover {
+    background: rgba(201, 162, 77, 0.1);
+    transform: translateY(-5px);
+    border-color: rgba(201, 162, 77, 0.2);
+    box-shadow: 0 10px 20px rgba(201, 162, 77, 0.15);
+}
+
+.singler-benefit-icon {
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    margin-bottom: 1rem;
+    opacity: 0.9;
+    color: var(--gold-accent);
+}
+
+.singler-benefit-card h3 {
+    color: var(--cream);
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    word-wrap: break-word;
+    line-height: 1.3;
+}
+
+.singler-benefit-card p {
+    color: var(--jasmine);
+    font-size: clamp(0.85rem, 1.8vw, 0.9rem);
+    margin: 0;
+    line-height: 1.5;
+    letter-spacing: 0.1px;
+    word-wrap: break-word;
+}
+
+/* Features list */
+.singler-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.singler-features li {
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    color: var(--vanilla);
+    background: linear-gradient(90deg, rgba(201,162,77,0.08), rgba(201,162,77,0.04));
+    padding: 0.55rem 1rem;
+    border-radius: 10px;
+    width: min(520px, 100%);
+    text-align: center;
+    border: 1px solid rgba(201,162,77,0.12);
+    word-wrap: break-word;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.singler-presentations {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--jasmine);
+    flex-shrink: 0;
+}
+
+.singler-sizes {
+    margin-top: 0.45rem;
+    font-size: clamp(1rem, 2vw, 1.05rem);
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.singler-final {
+    text-align: center;
+    margin-top: 0.8rem;
+    color: var(--jasmine);
+    font-size: clamp(0.9rem, 1.8vw, 1rem);
+    flex-shrink: 0;
+}
+
+/* PRESENTACIONES */
+.singler-presentation-section {
+    margin-bottom: 2rem;
+    flex-shrink: 0;
+}
+
+.singler-section-title {
+    color: var(--cream);
+    text-align: center;
+    font-size: clamp(1.1rem, 2.5vw, 1.2rem);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.singler-presentation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.2rem;
+}
+
+.singler-presentation-option {
+    background: linear-gradient(135deg, 
+        rgba(201, 162, 77, 0.06) 0%, 
+        rgba(201, 162, 77, 0.03) 100%);
+    border: 1px solid rgba(201, 162, 77, 0.12);
+    border-radius: 14px;
+    padding: clamp(1.2rem, 3vw, 1.8rem) 1rem;
+    text-align: center;
+    position: relative;
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.singler-presentation-option.featured {
+    background: linear-gradient(135deg, 
+        rgba(201, 162, 77, 0.15) 0%, 
+        rgba(201, 162, 77, 0.08) 100%);
+    border: 1px solid rgba(201, 162, 77, 0.25);
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(201, 162, 77, 0.15);
+}
+
+.singler-size {
+    color: var(--cream);
+    font-size: clamp(1.2rem, 2.8vw, 1.4rem);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.singler-desc {
+    color: var(--gold-light);
+    font-size: clamp(0.85rem, 1.8vw, 0.9rem);
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+/* UNIQUE SELLING */
+.singler-unique-selling {
+    background: rgba(201, 162, 77, 0.1);
+    border: 1px solid rgba(201, 162, 77, 0.2);
+    border-radius: 14px;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    margin: clamp(1rem, 2.5vw, 2rem) 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.singler-selling-icon {
+    font-size: clamp(1.6rem, 3.5vw, 2rem);
+    margin-bottom: 0.8rem;
+    opacity: 0.9;
+    color: var(--gold);
+}
+
+.singler-selling-text {
+    color: var(--vanilla);
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    margin: 0;
+    line-height: 1.6;
+    max-width: 600px;
+    word-wrap: break-word;
+}
+
+/* CTA - BOTONES OPTIMIZADOS SIN SCROLL */
+.singler-modal-cta {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201, 162, 77, 0.12);
+    flex-shrink: 0; /* Fijo en la parte inferior */
+    margin-top: auto; /* Empujar hacia abajo */
+}
+
+.singler-modal-actions {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+    align-items: center; /* ← AÑADE ESTA LÍNEA PARA CENTRAR VERTICALMENTE */
+    flex-wrap: wrap; /* Permitir wrap en móviles */
+}
+
+.singler-modal-btn {
+    padding: clamp(0.9rem, 2.5vw, 1.1rem) clamp(1rem, 2.5vw, 1.5rem); /* Padding reducido */
+    border-radius: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Gap reducido */
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    letter-spacing: 0.3px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex: 1; /* Tomar espacio disponible */
+    min-width: 0; /* Permitir que se encoja */
+    max-width: 300px; /* Máximo ancho */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-height: 52px; /* Altura mínima táctil */
+}
+
+.singler-btn-primary {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--amber) 100%);
+    color: var(--text-dark);
+    box-shadow: 0 8px 20px rgba(201, 162, 77, 0.4);
+    border: 1px solid rgba(212, 165, 116, 0.4);
+}
+
+.singler-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(201, 162, 77, 0.6);
+    background: linear-gradient(135deg, var(--gold-accent) 0%, var(--gold-light) 100%);
+}
+
+.singler-btn-secondary {
+    background: rgba(201, 162, 77, 0.08);
+    color: var(--gold-light);
+    border: 1px solid rgba(201, 162, 77, 0.2);
+}
+
+.singler-btn-secondary:hover {
+    background: rgba(201, 162, 77, 0.15);
+    color: var(--cream);
+    border-color: rgba(201, 162, 77, 0.3);
+    transform: translateY(-2px);
+}
+
+.singler-btn-text {
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    font-weight: 600;
+    text-align: center;
+    z-index: 1;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+.singler-btn-icon {
+    font-size: clamp(1rem, 2.2vw, 1.1rem);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    z-index: 1;
+    position: relative;
+}
+
+.singler-btn-primary:hover .singler-btn-icon {
+    transform: translateX(3px);
+}
+
+.singler-countdown {
+    font-size: clamp(0.75rem, 1.8vw, 0.8rem);
+    opacity: 0.7;
+    margin-top: 0.3rem;
+    font-weight: 400;
+    color: var(--gold-light);
+    text-align: center;
+}
+
+.singler-guarantee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.singler-guarantee-icon {
+    color: var(--gold);
+    font-weight: bold;
+    font-size: clamp(1rem, 2.2vw, 1.1rem);
+}
+
+.singler-guarantee-text {
+    color: var(--jasmine);
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+    letter-spacing: 0.2px;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.singler-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ==================== RESPONSIVE BREAKPOINTS SIN SCROLL ==================== */
+
+/* Desktop Large (≥1200px) */
+@media (min-width: 1200px) {
+    .singler-modal {
+        max-width: 850px;
+    }
+    
+    .singler-benefits-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .singler-modal-actions {
+        flex-wrap: nowrap;
+    }
+    
+    .singler-modal-btn {
+        max-width: 280px;
+    }
+}
+
+/* Desktop (≥992px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .singler-modal {
+        max-width: 800px;
+    }
+    
+    .singler-benefits-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .singler-modal-actions {
+        flex-wrap: nowrap;
+    }
+}
+
+/* Tablet Landscape (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .singler-modal {
+        max-width: 720px;
+        margin: 1rem;
+    }
+    
+    .singler-modal-body {
+        padding: 1.5rem 1.8rem 1.8rem;
+    }
+    
+    .singler-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .singler-modal-actions {
+        flex-direction: row;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .singler-modal-btn {
+        min-width: 180px;
+        padding: 0.9rem 1rem;
+        flex: 1;
+        max-width: calc(50% - 0.5rem);
+    }
+    
+    .singler-features li {
+        width: 100%;
+        max-width: 500px;
+    }
+}
+
+/* Tablet Portrait (576px - 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    .singler-modal {
+        width: calc(100% - 32px);
+        margin: 1rem;
+        max-height: calc(100vh - 32px);
+    }
+    
+    .singler-modal-body {
+        padding: 1.2rem 1.5rem 1.5rem;
+    }
+    
+    .singler-modal-header {
+        padding: 1.2rem 1.5rem 0.8rem;
+    }
+    
+    .singler-benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .singler-presentation-option.featured {
+        transform: scale(1.02);
+    }
+    
+    .singler-modal-actions {
+        flex-direction: row;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+    }
+    
+    .singler-modal-btn {
+        width: calc(50% - 0.4rem);
+        min-width: unset;
+        padding: 0.8rem 0.6rem;
+        min-height: 48px;
+        font-size: 0.85rem;
+    }
+    
+    .singler-btn-text {
+        font-size: 0.85rem;
+    }
+    
+    .singler-btn-icon {
+        font-size: 0.9rem;
+    }
+    
+    .singler-features li {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+/* Mobile (480px - 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+    .singler-modal-overlay {
+        padding: 12px;
+    }
+    
+    .singler-modal {
+        width: calc(100% - 24px);
+        border-radius: 18px;
+        max-height: calc(100vh - 24px);
+    }
+    
+    .singler-modal-header {
+        padding: 1rem 1.2rem 0.6rem;
+    }
+    
+    .singler-modal-badge {
+        padding: 0.3rem 1rem;
+        font-size: 0.7rem;
+    }
+    
+    .singler-modal-body {
+        padding: 1rem 1.2rem 1.2rem;
+    }
+    
+    .singler-modal-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .singler-modal-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .singler-benefit-card {
+        padding: 1rem 0.8rem;
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .singler-presentation-option {
+        padding: 1.2rem 0.8rem;
+    }
+    
+    .singler-presentation-option.featured {
+        transform: none;
+        order: -1;
+    }
+    
+    .singler-unique-selling {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .singler-modal-cta {
+        padding-top: 1rem;
+    }
+    
+    .singler-features li {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.8rem;
+        width: 100%;
+    }
+    
+    .singler-guarantee {
+        gap: 0.4rem;
+        margin-top: 1rem;
+    }
+    
+    /* BOTONES OPTIMIZADOS MÓVIL */
+    .singler-modal-actions {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .singler-modal-btn {
+        width: 100%;
+        padding: 0.8rem 0.6rem;
+        min-height: 46px;
+        font-size: 0.85rem;
+        max-width: 100%;
+    }
+    
+    .singler-btn-text {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile Small (≤479px) */
+@media (max-width: 479px) {
+    .singler-modal-overlay {
+        padding: 8px;
+        align-items: center; /* Centrar verticalmente */
+        justify-content: center;
+    }
+    
+    .singler-modal {
+        width: calc(100% - 16px);
+        border-radius: 16px;
+        max-height: calc(100vh - 16px);
+        margin: auto; /* Centrar */
+    }
+    
+    .singler-modal-header {
+        padding: 0.8rem 1rem 0.5rem;
+        border-radius: 16px 16px 0 0;
+    }
+    
+    .singler-modal-badge {
+        padding: 0.25rem 0.8rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.3px;
+    }
+    
+    .singler-modal-close {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+    
+    .singler-modal-body {
+        padding: 0.8rem 1rem 1rem;
+        flex: 1;
+        overflow: visible;
+    }
+    
+    .singler-modal-icon {
+        font-size: 2.2rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .singler-modal-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.2rem;
+        line-height: 1.3;
+    }
+    
+    .singler-modal-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 0.6rem;
+        line-height: 1.4;
+    }
+    
+    .singler-benefits-grid {
+        gap: 0.8rem;
+        margin-bottom: 1.2rem;
+    }
+    
+    .singler-benefit-card {
+        padding: 0.8rem 0.6rem;
+        border-radius: 12px;
+    }
+    
+    .singler-benefit-icon {
+        font-size: 1.6rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .singler-benefit-card h3 {
+        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .singler-benefit-card p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+    
+    .singler-presentation-section {
+        margin-bottom: 1.2rem;
+    }
+    
+    .singler-section-title {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+    
+    .singler-presentation-option {
+        padding: 1rem 0.6rem;
+        border-radius: 12px;
+    }
+    
+    .singler-size {
+        font-size: 1.2rem;
+    }
+    
+    .singler-desc {
+        font-size: 0.8rem;
+    }
+    
+    .singler-unique-selling {
+        padding: 0.8rem;
+        margin: 1rem 0;
+        border-radius: 12px;
+    }
+    
+    .singler-selling-icon {
+        font-size: 1.4rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .singler-selling-text {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .singler-modal-cta {
+        padding-top: 0.8rem;
+    }
+    
+    /* BOTONES ULTRA OPTIMIZADOS MÓVIL PEQUEÑO */
+    .singler-modal-actions {
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+        flex-direction: column;
+    }
+    
+    .singler-modal-btn {
+        padding: 0.7rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        min-height: 44px;
+        width: 100%;
+    }
+    
+    .singler-btn-text {
+        font-size: 0.8rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .singler-btn-icon {
+        font-size: 0.85rem;
+        margin-right: 0.3rem;
+    }
+    
+    .singler-features {
+        gap: 0.4rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .singler-features li {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+        border-radius: 8px;
+        width: 100%;
+    }
+    
+    .singler-guarantee {
+        gap: 0.3rem;
+        margin-top: 0.8rem;
+    }
+    
+    .singler-guarantee-icon {
+        font-size: 0.9rem;
+    }
+    
+    .singler-guarantee-text {
+        font-size: 0.75rem;
+    }
+    
+    .singler-countdown {
+        font-size: 0.7rem;
+    }
+}
+
+/* ==================== AJUSTES ESPECIALES PARA HORIZONTAL SIN SCROLL ==================== */
+
+/* Horizontal en móviles - SIN SCROLL, CONTENIDO COMPACTO */
+@media (max-height: 600px) and (orientation: landscape) {
+    .singler-modal-overlay {
+        padding: 4px;
+        align-items: center;
+    }
+    
+    .singler-modal {
+        width: min(98%, 700px);
+        max-height: calc(100vh - 8px);
+        margin: 0 auto;
+    }
+    
+    /* CONTENIDO MÁS COMPACTO PARA HORIZONTAL */
+    .singler-modal-header {
+        padding: 0.6rem 1rem 0.4rem;
+    }
+    
+    .singler-modal-body {
+        padding: 0.6rem 1.2rem 1rem;
+    }
+    
+    .singler-modal-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .singler-modal-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .singler-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .singler-benefit-card {
+        padding: 0.6rem;
+    }
+    
+    .singler-benefit-icon {
+        font-size: 1.4rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    .singler-benefit-card h3 {
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .singler-benefit-card p {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+    
+    .singler-presentation-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .singler-presentation-option {
+        padding: 0.6rem;
+    }
+    
+    /* BOTONES EN FILA COMPACTOS - SIN DESBORDAMIENTO */
+    .singler-modal-actions {
+        flex-direction: row;
+        gap: 0.5rem;
+        margin-bottom: 0.8rem;
+        flex-wrap: nowrap;
+    }
+    
+    .singler-modal-btn {
+        flex: 1;
+        padding: 0.5rem 0.3rem;
+        font-size: 0.75rem;
+        min-height: 36px;
+        border-radius: 10px;
+        min-width: 0;
+        max-width: none;
+    }
+    
+    .singler-btn-text {
+        font-size: 0.75rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .singler-btn-icon {
+        font-size: 0.8rem;
+        margin-right: 0.2rem;
+    }
+    
+    /* Reducir otros elementos para evitar scroll */
+    .singler-unique-selling {
+        padding: 0.6rem;
+        margin: 0.6rem 0;
+    }
+    
+    .singler-features {
+        margin-bottom: 0.6rem;
+    }
+    
+    .singler-features li {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.5rem;
+        margin-bottom: 0.2rem;
+    }
+    
+    .singler-guarantee {
+        margin-top: 0.5rem;
+        gap: 0.3rem;
+    }
+    
+    .singler-selling-text,
+    .singler-benefit-card p,
+    .singler-guarantee-text {
+        line-height: 1.3;
+    }
+}
+
+/* Horizontal en pantallas muy cortas - CONTENIDO MÍNIMO */
+@media (max-height: 400px) and (orientation: landscape) {
+    .singler-modal {
+        max-height: calc(100vh - 4px);
+    }
+    
+    .singler-modal-header {
+        padding: 0.4rem 0.8rem 0.3rem;
+    }
+    
+    .singler-modal-badge {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.6rem;
+    }
+    
+    .singler-modal-body {
+        padding: 0.4rem 0.8rem 0.6rem;
+    }
+    
+    /* OCULTAR ELEMENTOS NO ESENCIALES */
+    .singler-modal-icon {
+        display: none;
+    }
+    
+    .singler-benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .singler-benefit-card {
+        padding: 0.4rem;
+    }
+    
+    .singler-benefit-card h3 {
+        font-size: 0.75rem;
+    }
+    
+    .singler-benefit-card p {
+        font-size: 0.65rem;
+        display: none; /* Ocultar descripción */
+    }
+    
+    /* BOTONES MÍNIMOS */
+    .singler-modal-actions {
+        gap: 0.3rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .singler-modal-btn {
+        padding: 0.4rem 0.2rem;
+        min-height: 32px;
+        font-size: 0.7rem;
+    }
+    
+    .singler-btn-icon {
+        display: none; /* Ocultar íconos */
+    }
+    
+    .singler-features li {
+        display: none; /* Ocultar features */
+    }
+    
+    .singler-unique-selling {
+        padding: 0.4rem;
+        margin: 0.4rem 0;
+    }
+    
+    .singler-presentation-grid {
+        gap: 0.4rem;
+    }
+    
+    .singler-guarantee {
+        margin-top: 0.4rem;
+    }
+}
+
+/* Pantallas muy pequeñas (≤320px) - AJUSTES FINALES */
+@media (max-width: 320px) {
+    .singler-modal {
+        border-radius: 14px;
+        max-height: calc(100vh - 8px);
+    }
+    
+    .singler-modal-header {
+        padding: 0.6rem 0.8rem 0.4rem;
+        border-radius: 14px 14px 0 0;
+    }
+    
+    .singler-modal-badge {
+        padding: 0.2rem 0.6rem;
+        font-size: 0.6rem;
+    }
+    
+    .singler-modal-body {
+        padding: 0.6rem 0.8rem 0.8rem;
+    }
+    
+    .singler-modal-title {
+        font-size: 1.15rem;
+    }
+    
+    .singler-modal-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .singler-benefit-card {
+        padding: 0.6rem 0.4rem;
+    }
+    
+    .singler-modal-btn {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.75rem;
+        min-height: 40px;
+    }
+    
+    .singler-btn-text {
+        font-size: 0.75rem;
+    }
+}
+
+/* Soporte para dispositivos con notch - SIN AFECTAR SCROLL */
+@supports (padding: max(0px)) {
+    .singler-modal-overlay {
+        padding-left: max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+        padding-top: max(16px, env(safe-area-inset-top));
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+    
+    @media (max-width: 767px) {
+        .singler-modal-overlay {
+            padding-left: max(8px, env(safe-area-inset-left));
+            padding-right: max(8px, env(safe-area-inset-right));
+            padding-top: max(8px, env(safe-area-inset-top));
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+        }
+    }
+}
+
+/* Ajustes para modo claro del sistema */
+@media (prefers-color-scheme: light) {
+    .singler-modal-overlay {
+        background: linear-gradient(180deg, 
+            rgba(250, 248, 243, 0.92) 0%, 
+            rgba(245, 240, 230, 0.96) 50%, 
+            rgba(250, 243, 224, 0.98) 100%);
+    }
+    
+    .singler-modal {
+        background: linear-gradient(165deg, 
+            rgba(250, 248, 243, 0.98) 0%, 
+            rgba(245, 240, 230, 0.98) 50%, 
+            rgba(232, 212, 176, 0.98) 100%);
+        color: var(--charcoal);
+        border-image: linear-gradient(135deg, 
+            rgba(201, 162, 77, 0.3) 0%, 
+            rgba(201, 162, 77, 0.2) 50%, 
+            rgba(212, 165, 116, 0.1) 100%) 1;
+    }
+    
+    .singler-modal-title,
+    .singler-benefit-card h3,
+    .singler-section-title,
+    .singler-size {
+        color: var(--text-dark);
+    }
+    
+    .singler-benefit-card p,
+    .singler-modal-subtitle,
+    .singler-features li,
+    .singler-selling-text,
+    .singler-desc,
+    .singler-guarantee-text {
+        color: var(--sandalwood);
+    }
+    
+    .singler-benefit-card {
+        background: rgba(201, 162, 77, 0.08);
+        border: 1px solid rgba(201, 162, 77, 0.15);
+    }
+    
+    .singler-btn-secondary {
+        background: rgba(201, 162, 77, 0.1);
+        color: var(--gold-dark);
+        border: 1px solid rgba(201, 162, 77, 0.2);
+    }
+    
+    .singler-btn-secondary:hover {
+        background: rgba(201, 162, 77, 0.2);
+        color: var(--text-dark);
+    }
+    
+    .singler-title-highlight {
+        background: linear-gradient(135deg, var(--gold-dark) 0%, var(--spice) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+}
+
+/* Reglas para prevenir scroll en todos los casos */
+html.singler-modal-open,
+body.singler-modal-open {
+    overflow: hidden !important;
+    height: 100% !important;
+    position: fixed !important;
+    width: 100% !important;
+}
+
+.singler-modal-overlay.active ~ * {
+    overflow: hidden !important;
+}
+
+/* Asegurar que no haya desbordamiento interno */
+.singler-modal * {
+    box-sizing: border-box !important;
+}
+
+/* Clases utilitarias para contenido que puede ocultarse */
+.singler-hidden-on-mobile {
+    display: block;
+}
+
+@media (max-width: 767px) {
+    .singler-hidden-on-mobile {
+        display: none;
+    }
+}
+
+.singler-hidden-on-horizontal {
+    display: block;
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .singler-hidden-on-horizontal {
+        display: none;
+    }
+}

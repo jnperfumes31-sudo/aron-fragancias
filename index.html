@@ -92,6 +92,50 @@
     </div>
 
     <!-- JavaScript for Interactive Effects -->
+<!-- Popup Modal para perfumes Singler -->
+<!-- Popup Modal para perfumes Singler -->
+<div class="singler-modal-overlay" id="singler-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="singler-modal-title">
+    <div class="singler-modal" role="document">
+        <div class="singler-modal-header">
+            <div class="singler-modal-badge">NUEVA LÍNEA</div>
+            <button class="singler-modal-close" id="singler-modal-close" aria-label="Cerrar">
+                <span class="close-icon">×</span>
+                <span class="singler-sr-only">Cerrar ventana emergente</span>
+            </button>
+        </div>
+        
+        <div class="singler-modal-body">
+            <div class="singler-modal-icon">✨</div>
+            <h2 id="singler-modal-title" class="singler-modal-title">Conoce <span class="singler-title-highlight">Singler</span></h2>
+
+            <p class="singler-modal-subtitle">La alternativa accesible sin perder calidad.</p>
+
+            <ul class="singler-features">
+                <li>✨ Esencias de alta calidad</li>
+                <li>💎 Excelente fijación</li>
+                <li>🎯 Gran relación calidad-precio</li>
+            </ul>
+
+            <div class="singler-presentations">
+                <strong>Presentaciones disponibles:</strong>
+                <div class="singler-sizes">30 ml — 60 ml — 100 ml</div>
+            </div>
+
+            <p class="singler-final">🎁 <strong>Tú eliges el aroma, nosotros lo preparamos para ti.</strong></p>
+
+            <div class="singler-modal-cta">
+                <div class="singler-modal-actions">
+                    <a href="pages/products.html" class="singler-modal-btn singler-btn-primary">
+                        <span class="singler-btn-text">Ver catálogo</span>
+                    </a>
+                    <!-- <button class="singler-modal-btn singler-btn-secondary" id="singler-modal-close-2">Cerrar</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="js/popup.js" defer></script>
     <script>
         // Parallax effect on mouse move
         document.addEventListener('mousemove', (e) => {
