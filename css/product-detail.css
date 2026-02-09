@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 * {
     margin: 0;
@@ -1258,6 +1258,7 @@ body::before {
 
     .nav {
         gap: 0.6rem;
+        display: none; /* Ocultar la navegación en móvil como en products.css */
     }
 
     .nav-link {
@@ -1445,6 +1446,7 @@ body::before {
         flex-wrap: wrap;
         flex-basis: 100%;
         order: 3;
+        display: none; /* Ocultar la navegación en móvil pequeño */
     }
 
     .nav-link {
