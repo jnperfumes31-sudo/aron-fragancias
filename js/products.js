@@ -83,9 +83,9 @@ function setUIState(state) {
 
 // ─── Lógica de descuento (función pura, reutilizable) ───────────────────────
 function calcDiscount(product) {
-    const precioOriginal = product.precio || 0;
+    const precioOriginal = product.precio_aron || 0;
     const tieneDescuento = product.tiene_descuento === true;
-    const valor          = product.descuento_valor || 0;
+    const valor          = product.descuento_valor_aron || 0;
     const tipo           = product.descuento_tipo || 'none';
 
     if (!tieneDescuento || valor <= 0 || precioOriginal <= 0) {

@@ -73,8 +73,8 @@ function parseStockValue(value) {
 }
 
 function getDiscountInfo(product) {
-    const precioOriginal = Number(product.precio ?? product.price ?? 0);
-    const rawValue = Number(product.descuento_valor ?? product.descuento ?? product.oferta ?? 0);
+    const precioOriginal = Number(product.precio_aron ?? product.precio ?? product.price ?? 0);
+    const rawValue = Number(product.descuento_valor_aron ?? product.descuento_valor ?? product.descuento ?? product.oferta ?? 0);
     const tipo = String(product.descuento_tipo || 'porcentaje').toLowerCase();
     const toggle = product.tiene_descuento;
     const aplica = toggle === false ? false : (rawValue > 0 && precioOriginal > 0);
